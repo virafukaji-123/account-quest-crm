@@ -1,0 +1,58 @@
+{
+ "note": "Events returned by the game's get_signals on 14 Nov 2026 at 2026-11-14T08:18:38.419Z (UTC), recorded so the CRM keeps its history even if the game stops listing them.",
+ "recorded_at": "2026-11-14T08:18:38.419Z",
+ "signals": [
+  {
+   "id": "champion_leaves",
+   "account": "A",
+   "dated": "2026-11-17",
+   "title": "Eastern Counties: Rhys Calder is moving on",
+   "summary": "Rhys Calder has emailed to say he leaves the drone programme in January. No successor is named. Every call on file before the handover was with him alone.",
+   "records": [
+    {
+     "kind": "email",
+     "path": "A/emails/2026-11-17_rhys_moving.txt",
+     "text": "From: Rhys Calder\nTo: (the CSM on the account)\nDate: 17 November 2026\nSubject: A change on my side\n\nA quick note so you hear it from me. I am moving to another role in the new year and will hand over the drone programme in January. My successor has not been named yet.\n\nAnything we have agreed stands. Until January, keep sending things to the programme office and I will make sure they land.\n\nRhys\n"
+    }
+   ],
+   "set_off_at": "2026-11-13T13:32:50.483Z"
+  },
+  {
+   "id": "urgent_request",
+   "account": "A",
+   "dated": "2026-11-18",
+   "title": "Eastern Counties: Westmere needs an answer before a public event",
+   "summary": "Insp. Karen Mbeki has written directly, and logged a ticket, ahead of a large public event on 5 December. She wants two things settled in writing this week: dates for training more operators before the day, and who answers if a dock fails on the day. Nobody has replied.",
+   "records": [
+    {
+     "kind": "email",
+     "path": "A/emails/2026-11-18_karen_event.txt",
+     "text": "From: Insp. Karen Mbeki\nTo: (the CSM on the account)\nDate: 18 November 2026\nSubject: Public event, 5 December\n\nWe are policing a large public event on Saturday 5 December and I want the docks to carry more of it than they do now.\n\nWhatever was said last week, I need two things settled in writing this week.\n1. Operators. How many more of my officers can be trained before the day, and when.\n2. Cover on the day. If a dock fails, who do I call and how fast does anyone answer.\n\nI am logging this as a ticket as well, so it has a number.\n\nKaren Mbeki\nWestmere drone unit\n"
+    },
+    {
+     "kind": "request",
+     "path": "A/requests.csv",
+     "note": "Row to add to the account's requests log.",
+     "text": "request_id,opened,from,summary,status,owner,last_update,how_it_arrived\nFB-11206,2026-11-18,Westmere drone unit,\"Operator training and support cover before a public event on 5 December. Marked urgent by the requester.\",Open,,2026-11-18,Support ticket\n"
+    }
+   ],
+   "set_off_at": "2026-11-13T13:32:54.168Z"
+  },
+  {
+   "id": "usage_drop",
+   "account": "B",
+   "dated": "2026-11-30",
+   "title": "Aldermoor: three docks that fly most nights have stopped",
+   "summary": "New weekly usage for Aldermoor, 2 to 29 November. Three docks that flew most nights flew nothing in the last two weeks. All three stayed online. No ticket has been raised and nobody at the customer has said anything.",
+   "records": [
+    {
+     "kind": "usage",
+     "path": "B/usage_weekly.csv",
+     "note": "Rows to add to the account's weekly usage.",
+     "text": "week_start,dock_id,flights,days_online\n2026-11-02,AD-01,1,7\n2026-11-09,AD-01,0,7\n2026-11-16,AD-01,0,7\n2026-11-23,AD-01,0,7\n2026-11-02,AD-02,6,7\n2026-11-09,AD-02,7,7\n2026-11-16,AD-02,0,7\n2026-11-23,AD-02,0,7\n2026-11-02,AD-03,0,7\n2026-11-09,AD-03,0,7\n2026-11-16,AD-03,1,7\n2026-11-23,AD-03,0,7\n2026-11-02,AD-04,0,7\n2026-11-09,AD-04,1,7\n2026-11-16,AD-04,0,7\n2026-11-23,AD-04,0,7\n2026-11-02,AD-05,6,7\n2026-11-09,AD-05,7,7\n2026-11-16,AD-05,0,7\n2026-11-23,AD-05,0,7\n2026-11-02,AD-06,0,7\n2026-11-09,AD-06,0,7\n2026-11-16,AD-06,0,7\n2026-11-23,AD-06,1,7\n2026-11-02,AD-07,0,7\n2026-11-09,AD-07,0,7\n2026-11-16,AD-07,1,7\n2026-11-23,AD-07,0,7\n2026-11-02,AD-08,6,7\n2026-11-09,AD-08,7,7\n2026-11-16,AD-08,5,7\n2026-11-23,AD-08,6,7\n2026-11-02,AD-09,1,7\n2026-11-09,AD-09,0,7\n2026-11-16,AD-09,0,7\n2026-11-23,AD-09,0,7\n2026-11-02,AD-10,5,7\n2026-11-09,AD-10,6,7\n2026-11-16,AD-10,0,7\n2026-11-23,AD-10,0,7\n2026-11-02,AD-11,0,7\n2026-11-09,AD-11,0,7\n2026-11-16,AD-11,1,7\n2026-11-23,AD-11,0,7\n2026-11-02,AD-12,0,7\n2026-11-09,AD-12,1,7\n2026-11-16,AD-12,0,7\n2026-11-23,AD-12,0,7\n2026-11-02,AD-13,1,7\n2026-11-09,AD-13,0,7\n2026-11-16,AD-13,0,7\n2026-11-23,AD-13,0,7\n2026-11-02,AD-14,0,7\n2026-11-09,AD-14,0,7\n2026-11-16,AD-14,0,7\n2026-11-23,AD-14,0,7\n"
+    }
+   ],
+   "set_off_at": "2026-11-13T13:33:17.704Z"
+  }
+ ]
+}
