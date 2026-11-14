@@ -786,5 +786,226 @@
     ]
    }
   ]
+ },
+ "H": {
+  "worth": {
+   "backed": [
+    {
+     "deal": "Renew the six-dock contract",
+     "id": "h_renewal_14b",
+     "value": "£96,000 a year",
+     "basis": "Order form: £96,000 a year, 13 Apr 2026 – 12 Apr 2027, no automatic renewal; invoice paid. Blocked: finance cannot see the saving.",
+     "ids": [
+      "h_renewal_14b",
+      "contract.txt",
+      "invoices.json"
+     ]
+    },
+    {
+     "deal": "Get the container yard dock live",
+     "id": "h_yard_14b",
+     "value": "Up to £30,000",
+     "basis": "Qualified, but the privacy assessment waits on answers FlytBase never sent (FB-10231).",
+     "ids": [
+      "h_yard_14b",
+      "h_yard_blocked_14b",
+      "FB-10231"
+     ]
+    },
+    {
+     "deal": "Rollout and alert-rota playbook",
+     "id": "h_rollout_pack_14b",
+     "value": "£12,000",
+     "basis": "Open offer to Marcus Hale, to be delivered with Tom before he leaves.",
+     "ids": [
+      "h_rollout_pack_14b",
+      "h_contractor_leaving_14b"
+     ]
+    }
+   ],
+   "unbacked": [
+    {
+     "item": "\"Saves about £400,000 a year\"",
+     "why": "Marcus's own estimate of patrol hours. Finance has not seen it, no patrol contract changed, and the order form excludes any FlytBase saving claim.",
+     "ids": [
+      "h_saving_claim_14b",
+      "h_saving_basis_14b",
+      "h_finance_unseen_14b",
+      "contract.txt"
+     ]
+    },
+    {
+     "item": "Docks for two more harbours",
+     "why": "Marcus's wish; outline price asked for on 23 Oct but no budget holder or timetable on file.",
+     "ids": [
+      "h_harbours_14b",
+      "h_expand_wish_14b",
+      "emails/2026-10-23_marcus_expand.txt"
+     ]
+    }
+   ]
+  },
+  "power": [
+   {
+    "deal": "Renewal (h_renewal_14b)",
+    "decides": "Priya Nair, finance director, signs the renewal. Marcus signed the first order.",
+    "pays": "Port operations (one invoice a year).",
+    "uses": "Port operations; Tom Reyes runs launches and alerts until he leaves.",
+    "blocks": "Finance (no visible saving); Elena Varga for the yard (privacy sign-off).",
+    "stance": [
+     [
+      "Marcus Hale",
+      "Ally. Wants more docks; keeps others out of the conversation."
+     ],
+     [
+      "Priya Nair",
+      "Guarded. Won't renew on a saving she can't see."
+     ],
+     [
+      "Elena Varga",
+      "Neutral. Ignored since April."
+     ],
+     [
+      "Sam Okoye",
+      "Neutral. Never involved."
+     ]
+    ],
+    "ids": [
+     "h_finance_renewal_14b",
+     "h_finance_unseen_14b",
+     "contract.txt",
+     "calls/2026-10-21_check_in.txt"
+    ]
+   }
+  ],
+  "first": [
+   {
+    "rank": 1,
+    "move": "Reply to Elena Varga's four questions (FB-10231) with the data retention and storage details, and apologise for 7 months' silence.",
+    "owner": "Viraf, with Pranjal Suyal (Lead Solutions Engineer)",
+    "by": "20 Nov 2026",
+    "deal": "h_yard_14b",
+    "ids": [
+     "FB-10231",
+     "h_vendor_silent_14b",
+     "h_yard_blocked_14b"
+    ]
+   },
+   {
+    "rank": 2,
+    "move": "Sit with Tom Reyes and write down launch steps, patrol routes and the alert rota; offer the £12,000 playbook to Marcus.",
+    "owner": "Viraf, with Achal Negi (Director of Business Development)",
+    "by": "4 Dec 2026",
+    "deal": "h_rollout_pack_14b",
+    "ids": [
+     "h_contractor_leaving_14b",
+     "h_rollout_pack_14b"
+    ]
+   },
+   {
+    "rank": 3,
+    "move": "Meet Priya Nair with Marcus: show night-patrol flights per quay and agree how the saving will be measured before renewal.",
+    "owner": "Viraf, with Achal Negi",
+    "by": "15 Dec 2026",
+    "deal": "h_renewal_14b",
+    "ids": [
+     "h_finance_renewal_14b",
+     "usage_weekly.csv",
+     "h_saving_basis_14b"
+    ]
+   }
+  ],
+  "wrong": [
+   {
+    "type": "Person leaving",
+    "what": "Tom Reyes's contract ends next month; launch steps, routes and alert rota are only in his head.",
+    "turnsBad": "About 14 Dec 2026.",
+    "ids": [
+     "h_contractor_leaving_14b",
+     "get_new_account → deadlines"
+    ]
+   },
+   {
+    "type": "Deadline at risk",
+    "what": "Renewal: term ends 12 Apr 2027 and does not renew by itself; finance won't sign on an unseen saving.",
+    "turnsBad": "At the renewal decision (April 2027).",
+    "ids": [
+     "contract.txt",
+     "h_finance_renewal_14b"
+    ]
+   },
+   {
+    "type": "Deal turning bad",
+    "what": "Only 2 of 6 docks fly nightly; D5 and D6 flew 3 times in 3 months. Finance will ask why pay for 6.",
+    "turnsBad": "When finance reviews the renewal.",
+    "ids": [
+     "usage_weekly.csv",
+     "flights.csv"
+    ]
+   },
+   {
+    "type": "Stuck",
+    "what": "Yard dock blocked: Elena's privacy request (FB-10231) unanswered since 14 Apr.",
+    "turnsBad": "Already stuck.",
+    "ids": [
+     "FB-10231",
+     "h_vendor_silent_14b"
+    ]
+   },
+   {
+    "type": "Deal turning bad",
+    "what": "Yard devices move to a segmented network around February; IT has no record of what the docks need.",
+    "turnsBad": "About 12 Feb 2027.",
+    "ids": [
+     "h_segmentation_14b",
+     "h_it_not_involved_14b"
+    ]
+   }
+  ],
+  "unknown": [
+   {
+    "gap": "Which dock sits at which quay or in the yard",
+    "why": "We can't tie usage to sites, or say which dock the yard one is.",
+    "who": "Tom Reyes (before he leaves)",
+    "ids": [
+     "devices.json",
+     "profile.json → not_on_file"
+    ]
+   },
+   {
+    "gap": "The working behind the £400,000 saving",
+    "why": "Priya will not renew without it.",
+    "who": "Marcus Hale, with Priya Nair",
+    "ids": [
+     "h_saving_basis_14b",
+     "h_finance_unseen_14b"
+    ]
+   },
+   {
+    "gap": "What the docks need from the new yard network",
+    "why": "The docks could drop offline after the change.",
+    "who": "Sam Okoye; Pranjal Suyal",
+    "ids": [
+     "h_segmentation_14b",
+     "h_it_not_involved_14b"
+    ]
+   },
+   {
+    "gap": "Elena's four questions in full",
+    "why": "Answering them unlocks the yard dock (up to £30,000).",
+    "who": "Elena Varga; FB-10231",
+    "ids": [
+     "FB-10231"
+    ]
+   },
+   {
+    "gap": "Who pays for the two extra harbours",
+    "why": "No budget holder or timetable; can't price it seriously yet.",
+    "who": "Marcus Hale, Priya Nair",
+    "ids": [
+     "h_harbours_14b"
+    ]
+   }
+  ]
  }
 }
