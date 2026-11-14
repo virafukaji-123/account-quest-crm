@@ -88,6 +88,7 @@
   .powercard { border:1px solid var(--line); border-radius:10px; padding:8px 12px; margin-bottom:8px; } .powercard h4 { margin:2px 0 6px; font-size:14px; }
   td.k { color:var(--muted); width:150px; white-space:nowrap; }
 
+  .filter { display:flex; gap:8px; flex-wrap:wrap; margin:6px 0 12px; }
   nav.views { display:flex; gap:6px; flex-wrap:wrap; margin:18px 0 6px; }
   nav.views button { border-radius:20px; padding:7px 16px; font-weight:600; }
   nav.views button.on { background:var(--ink); color:#fff; border-color:var(--ink); }
@@ -118,7 +119,7 @@
 </div>
 <div class="modal" id="modal" onclick="if(event.target===this)closeModal()"><div class="box" id="modalBox"></div></div>
 <script>
-let S = null, U = null, view = "overview", current = "B", openState = {}, seenEvents = null;
+let S = null, U = null, view = "overview", current = "B", clientF = "all", openState = {}, seenEvents = null;
 let ADMIN = ""; try { const k = new URLSearchParams(location.search).get("key"); if (k) localStorage.setItem("aqKey", k); ADMIN = localStorage.getItem("aqKey") || ""; } catch {}
 const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;" }[c]));
 const ago = (iso) => { if (!iso) return "never"; const m = Math.round((Date.now() - new Date(iso)) / 60000); return m < 1 ? "just now" : m < 60 ? `${m} min ago` : `${Math.round(m / 60)} h ago`; };
@@ -132,6 +133,8 @@ const A = () => S.accounts.find((a) => a.id === current);
 const atRisk = (a) => { const f = a.fleet, r = a.renewal; const per = r.value / f.total, idle = f.total - f.flyingNow; return { per, idle, value: per * idle }; };
 function sec(key, title, count, inner, open) { const o = openState[key] ?? open;
   return `<details class="sec" data-key="${key}" ${o ? "open" : ""}><summary>${title}<span class="count">${count ?? ""}</span></summary><div class="body">${inner}</div></details>`; }
+const filterBar = () => `<div class="filter">${[["all","Both clients"], ...S.accounts.map((a) => [a.id, a.name])].map(([k, t]) => `<button class="${clientF === k ? "primary" : ""}" onclick="clientF='${k}';render()">${esc(t)}</button>`).join("")}</div>`;
+const pickAcc = () => S.accounts.filter((a) => clientF === "all" || a.id === clientF);
 const VIEWS = [["overview","Overview"],["risks","Risks"],["opps","Opportunities"],["usage","Drone usage"],["detail","Account detail"]];
 
 // ---------- Overview ----------
@@ -148,17 +151,17 @@ function overview() {
 }
 // ---------- Risks ----------
 function risks() {
-  const rows = S.accounts.flatMap((a) => a.answers.wrong.map((w) => ({ a, ...w })));
+  const rows = pickAcc().flatMap((a) => a.answers.wrong.map((w) => ({ a, ...w })));
   const order = ["Deadline at risk","Deal turning bad","Person leaving","Going cold","Stuck"];
   rows.sort((x, y) => order.indexOf(x.type) - order.indexOf(y.type));
-  return `<div class="card"><h2>Risks across both accounts</h2><table class="t ans"><tr><th>Account</th><th>Risk</th><th>When it turns bad</th></tr>
+  return filterBar() + `<div class="card"><h2>${clientF === "all" ? "Risks across both clients" : "Risks – " + esc(pickAcc()[0].name)} <span class="meta">(${rows.length})</span></h2><table class="t ans"><tr><th>Account</th><th>Risk</th><th>When it turns bad</th></tr>
     ${rows.map((x) => `<tr><td>${tag(x.a)}</td><td><span class="tag risk">${esc(x.type)}</span> ${esc(x.what)}${chips(x.ids)}</td><td>${esc(x.turnsBad)}</td></tr>`).join("")}</table></div>
-    <div class="grid2">${S.accounts.map((a) => `<div class="card"><h2>${tag(a)} What we do first</h2><table class="t ans"><tr><th>#</th><th>Move</th><th>Owner · by</th></tr>
+    <div class="${clientF === "all" ? "grid2" : ""}">${pickAcc().map((a) => `<div class="card"><h2>${tag(a)} What we do first</h2><table class="t ans"><tr><th>#</th><th>Move</th><th>Owner · by</th></tr>
       ${a.answers.first.map((m) => `<tr><td><b>${m.rank}</b></td><td>${esc(m.move)}${chips(m.ids)}</td><td>${esc(m.owner)}<br><b>${esc(m.by)}</b></td></tr>`).join("")}</table></div>`).join("")}</div>`;
 }
 // ---------- Opportunities ----------
 function opps() {
-  return S.accounts.map((a) => { const w = a.answers.worth, r = atRisk(a);
+  return filterBar() + pickAcc().map((a) => { const w = a.answers.worth, r = atRisk(a);
     return `<div class="card"><h2>${tag(a)} ${esc(a.name)}</h2><table class="t ans"><tr><th>Opportunity</th><th>Value</th><th>Confidence</th><th>Basis</th></tr>
       ${w.backed.map((d) => `<tr><td><b>${esc(d.deal)}</b></td><td><b>${esc(d.value)}</b></td><td><span class="tag verified">Backed</span></td><td>${esc(d.basis)}${chips(d.ids)}</td></tr>`).join("")}
       <tr class="calc"><td><b>Protect the renewal</b></td><td><b>${money(r.value, a.renewal.currency)} at risk</b></td><td><span class="tag risk">At risk now</span></td><td>${r.idle} of ${a.fleet.total} docks not flying regularly × ${money(r.per, a.renewal.currency)} a dock. Live from usage data.</td></tr>
