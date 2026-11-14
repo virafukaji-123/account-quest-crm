@@ -100,6 +100,8 @@
   .acct.B { background:#7c3aed; }
   .acct.K { background:#c2410c; }
   .acct.H { background:#0369a1; }
+  .acct.custom { background:#475569; }
+  .form { display:grid; grid-template-columns:1fr 1fr; gap:10px 14px; } .form label { display:flex; flex-direction:column; font-size:13px; font-weight:600; gap:4px; } .form .full { grid-column:1/-1; } .form h3 { grid-column:1/-1; margin:8px 0 0; font-size:14px; color:var(--muted,#666); } .form input, .form select, .form textarea { font:inherit; font-weight:400; padding:7px 9px; border:1px solid #ccc; border-radius:8px; } @media (max-width:640px){ .form { grid-template-columns:1fr; } }
   .acct.new::after { content:" NEW"; font-size:10px; }
   .chart { width:100%; height:auto; } .chart text { font:11px Segoe UI,system-ui,sans-serif; fill:#6b7280; }
   .legend span { display:inline-block; margin-right:14px; font-size:12px; color:var(--muted); } .legend i { display:inline-block; width:10px; height:10px; border-radius:2px; margin-right:5px; vertical-align:middle; }
@@ -113,6 +115,7 @@
   <h1>Account Quest CRM <span class="meta" style="font-weight:400">· FlytBase key accounts</span></h1>
   <label class="switch"><input type="checkbox" id="srcToggle" onchange="document.body.classList.toggle('src', this.checked)"> Show sources</label>
   <span class="status" id="status">Loading…</span>
+  <button class="primary" onclick="clientForm()">+ Add client</button>
   <button onclick="window.print()">Print / PDF</button>
 </div></header>
 <div class="wrap">
@@ -127,14 +130,14 @@ let ADMIN = ""; try { const k = new URLSearchParams(location.search).get("key");
 const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;" }[c]));
 const ago = (iso) => { if (!iso) return "never"; const m = Math.round((Date.now() - new Date(iso)) / 60000); return m < 1 ? "just now" : m < 60 ? `${m} min ago` : `${Math.round(m / 60)} h ago`; };
 const fmtDate = (d) => d ? new Date(d).toLocaleDateString("en-GB", { day:"numeric", month:"short", year:"numeric" }) : "";
-const money = (v, cur) => (cur === "GBP" ? "£" : "€") + Math.round(v).toLocaleString("en-GB");
+const money = (v, cur) => ({ GBP: "£", EUR: "€", USD: "$", INR: "₹" }[cur] || "") + Math.round(v || 0).toLocaleString("en-GB");
 const chips = (ids) => (ids && ids.length ? `<div class="ids">${ids.map((i) => `<code>${esc(i)}</code>`).join(" ")}</div>` : "");
 const LABELS = { A: "Police", B: "Industrial", K: "Estate", H: "Port" };
-const tag = (a) => `<span class="acct ${a.id}${["K", "H"].includes(a.id) ? " new" : ""}">${LABELS[a.id] || esc(a.name.split(" ")[0])}</span>`;
+const tag = (a) => a.custom ? `<span class="acct custom">${esc(a.client.sector || "Client")}</span>` : `<span class="acct ${a.id}${["K", "H"].includes(a.id) ? " new" : ""}">${LABELS[a.id] || esc(a.name.split(" ")[0])}</span>`;
 const kindLabel = { risk:"Risk", task:"Task", next_step:"Next step", note:"Note" };
 const statusLabel = { claim:"Claim – not checked", told:"Told to us", verified:"Checked ✓" };
 const A = () => S.accounts.find((a) => a.id === current);
-const atRisk = (a) => { const f = a.fleet, r = a.renewal; const per = r.value / f.total, idle = f.total - f.flyingNow; return { per, idle, value: per * idle }; };
+const atRisk = (a) => { const f = a.fleet, r = a.renewal; const per = f.total ? r.value / f.total : 0, idle = f.total - f.flyingNow; return { per, idle, value: per * idle }; };
 function sec(key, title, count, inner, open) { const o = openState[key] ?? open;
   return `<details class="sec" data-key="${key}" ${o ? "open" : ""}><summary>${title}<span class="count">${count ?? ""}</span></summary><div class="body">${inner}</div></details>`; }
 const filterBar = () => `<div class="filter">${[["all","All clients"], ...S.accounts.map((a) => [a.id, a.name])].map(([k, t]) => `<button class="${clientF === k ? "primary" : ""}" onclick="clientF='${k}';render()">${esc(t)}</button>`).join("")}</div>`;
@@ -146,7 +149,7 @@ function overview() {
   return `<div class="grid2">${S.accounts.map((a) => { const r = atRisk(a), q = a.answers;
     return `<div class="card"><h2>${tag(a)} ${esc(a.name)} <span class="badge ${a.health.rating}">${a.health.rating}</span></h2>
       <div class="bottom">${esc(a.brief?.headline || "")}</div>
-      <div class="kpi"><div><small>Contract</small><b>${esc(a.renewal.label)}</b></div><div><small>Renewal</small><b>${fmtDate(a.renewal.date)}</b><br><span class="meta">${a.renewal.daysLeft} days · not automatic</span></div>
+      <div class="kpi"><div><small>Contract</small><b>${esc(a.renewal.label)}</b></div><div><small>Renewal</small><b>${fmtDate(a.renewal.date)}</b><br><span class="meta">${a.renewal.daysLeft} days · ${a.renewal.auto ? "renews automatically" : "not automatic"}</span></div>
       <div><small>Docks flying regularly now</small><b>${a.fleet.flyingNow} of ${a.fleet.total}</b> <button class="linkbtn" onclick="current='${a.id}';trace('fleet')">trace</button></div><div><small>Renewal value at risk</small><b>${money(r.value, a.renewal.currency)}</b><br><span class="meta">${r.idle} idle docks × ${money(r.per, a.renewal.currency)}</span></div></div>
       <b>Top risks</b><ul class="clean">${q.wrong.slice(0, 3).map((w) => `<li>${esc(w.what)}</li>`).join("")}</ul>
       <b style="display:block;margin-top:8px">First move</b><div>${esc(q.first[0].move)} <span class="meta">– ${esc(q.first[0].owner)}, by ${esc(q.first[0].by)}</span></div>
@@ -185,7 +188,7 @@ function chart(weeks) {
 }
 function usage() {
   if (!U) return `<div class="card">Loading usage…</div>`;
-  return S.accounts.map((a) => { const wk = (U[a.id]?.weeks || []).slice(-16), l4 = wk.slice(-4), p4 = wk.slice(-8, -4);
+  return S.accounts.filter((a) => U[a.id]).map((a) => { const wk = (U[a.id]?.weeks || []).slice(-16), l4 = wk.slice(-4), p4 = wk.slice(-8, -4);
     const sum = (x) => x.reduce((t, w) => t + w.flights, 0), now = sum(l4), before = sum(p4), ch = before ? Math.round((now - before) / before * 100) : 0;
     return `<div class="card"><h2>${tag(a)} ${esc(a.name)} – drone usage</h2>
       <div class="kpi" style="grid-template-columns:repeat(4,1fr)"><div><small>Flights, last 4 weeks</small><b>${now}</b></div><div><small>vs previous 4 weeks</small><b style="color:${ch < 0 ? "var(--red)" : "var(--green)"}">${ch > 0 ? "+" : ""}${ch}%</b></div>
@@ -227,9 +230,9 @@ function fiveAnswers(a) {
 function detail() {
   const a = A(), f = a.fleet, h = a.health;
   let html = `<div style="display:flex;gap:8px;margin:6px 0 12px">${S.accounts.map((x) => `<button class="${x.id === current ? "primary" : ""}" onclick="current='${x.id}';render()">${esc(x.name)}</button>`).join("")}</div>`;
-  html += `<div class="card"><h2>${tag(a)} ${esc(a.name)} <span class="badge ${h.rating}">${h.rating} · ${h.score} risk points</span></h2><div class="headline">${esc(a.brief?.headline || "")}</div>
+  html += `<div class="card"><h2>${tag(a)} ${esc(a.name)} <span class="badge ${h.rating}">${h.rating}${a.custom ? " · set by owner" : " · " + h.score + " risk points"}</span>${a.custom ? ` <button class="small" onclick="clientForm('${a.id}')">Edit</button> <button class="small" onclick="deleteClient('${a.id}')">Delete</button>` : ""}</h2><div class="headline">${esc(a.brief?.headline || "")}</div>
     <div class="nums"><div class="num"><small>Contract</small><b>${esc(a.renewal.label)}</b><br><button class="linkbtn" onclick="trace('renewal')">where from?</button></div>
-    <div class="num"><small>Renewal</small><b>${fmtDate(a.renewal.date)}</b><br><span class="meta">${a.renewal.daysLeft} days · not automatic</span></div>
+    <div class="num"><small>Renewal</small><b>${fmtDate(a.renewal.date)}</b><br><span class="meta">${a.renewal.daysLeft} days · ${a.renewal.auto ? "renews automatically" : "not automatic"}</span></div>
     <div class="num"><small>Docks flying regularly now</small><b>${f.flyingNow} of ${f.total}</b><br><button class="linkbtn" onclick="trace('fleet')">trace this number</button></div>
     <div class="num"><small>Open requests nobody owns</small><b>${a.openRequests.length}</b><br><button class="linkbtn" onclick="trace('requests')">see them</button></div></div></div>`;
   html += `<div class="card"><h2>The five answers</h2>${fiveAnswers(a).map((x) => `<div class="answer"><h3>${x.q}</h3>${x.a}<div class="src">How it decides: ${esc(x.src)}</div></div>`).join("")}</div>`;
@@ -240,7 +243,7 @@ function detail() {
   html += sec("notes", "📝 Notes for the judges", `${sent.length} sent`, a.drafts.map((d, i) => {
     const st = sent.includes(d.title) ? `<span class="meta ok">✓ sent</span>` : queued.includes(d.title) ? `<span class="meta">⏳ queued</span>` : ADMIN ? `<button class="small primary" onclick="sendDraft(${i})">Send</button>` : "";
     return `<div class="item" style="display:flex;gap:12px"><div style="flex:1"><b>${esc(d.title)}</b><span class="tag ${d.kind}">${kindLabel[d.kind]}</span><br>${esc(d.text)}</div>${st}</div>`; }).join("")
-    + (ADMIN ? `<div class="item"><b>Write your own</b><div style="display:grid;grid-template-columns:160px 1fr;gap:8px"><select id="nKind"><option value="next_step">Next step</option><option value="risk">Risk</option><option value="task">Task</option><option value="note">Note</option></select><input id="nTitle" placeholder="Short title"></div><textarea id="nText" placeholder="What, who, by when, and the evidence" style="margin-top:6px"></textarea><button class="primary" style="margin-top:6px" onclick="sendOwn()">Queue note</button></div>` : `<div class="meta">Read-only view. The owner sends notes with a private key.</div>`), false);
+    + (ADMIN && !a.custom ? `<div class="item"><b>Write your own</b><div style="display:grid;grid-template-columns:160px 1fr;gap:8px"><select id="nKind"><option value="next_step">Next step</option><option value="risk">Risk</option><option value="task">Task</option><option value="note">Note</option></select><input id="nTitle" placeholder="Short title"></div><textarea id="nText" placeholder="What, who, by when, and the evidence" style="margin-top:6px"></textarea><button class="primary" style="margin-top:6px" onclick="sendOwn()">Queue note</button></div>` : `<div class="meta">Read-only view. The owner sends notes with a private key.</div>`), false);
   html += sec("facts", "💬 What people told us", a.facts.length, a.facts.map((x) => `<div class="item">"${esc(x.text)}"<span class="tag ${x.status}">${statusLabel[x.status] || x.status}</span><br><span class="meta">${esc(x.said_by)}</span></div>`).join(""), false);
   html += sec("tech", "⚙️ Behind the scenes", "", `<div class="meta">Game date ${fmtDate(S.gameDate)} · storage: ${esc(S.storage)} · accounts fetched ${ago(S.dataAsOf.accounts)} · events checked ${ago(S.dataAsOf.signals)}</div>
     <div class="log" style="margin-top:8px">${S.log.map((l) => `<div><span class="${l.ok ? "ok" : "err"}">${l.ok ? "✓" : "✗"}</span> ${esc(l.call)} <span class="meta">${ago(l.at)}</span>${l.error ? ` <span class="err">${esc(l.error)}</span>` : ""}</div>`).join("") || '<div class="empty">No calls yet</div>'}</div>`, false);
@@ -274,6 +277,36 @@ function trace(what) {
   document.getElementById("modal").classList.add("show");
 }
 function closeModal() { document.getElementById("modal").classList.remove("show"); }
+
+// ---------- add / edit a client (owner only) ----------
+const FIELDS = [
+  ["About the client"], ["name", "Client name *"], ["sector", "Sector / industry"], ["stage", "Stage", ["Onboarding", "Live", "Expanding", "At risk", "Renewal due"]], ["health", "Health", ["Green", "Amber", "Red"]], ["owner", "Account owner (CSM)"],
+  ["Main contact"], ["contactName", "Name"], ["contactRole", "Role"], ["contactEmail", "Email", "email"], ["contactPhone", "Phone", "tel"], ["decisionMaker", "Who signs the renewal"],
+  ["Contract"], ["annualValue", "Contract value per year *", "number"], ["currency", "Currency", ["GBP", "EUR", "USD", "INR"]], ["termStart", "Contract start", "date"], ["renewalDate", "Renewal date *", "date"], ["autoRenew", "Renews automatically?", ["No", "Yes"]],
+  ["Drones"], ["docks", "Total docks", "number"], ["docksFlying", "Docks flying regularly", "number"],
+  ["Plan"], ["opportunity", "Opportunity (upsell)"], ["opportunityValue", "Opportunity value", "number"], ["nextStep", "Next step"], ["nextStepDue", "Next step due", "date"],
+  ["risks", "Key risks (one per line)", "area"], ["questions", "What we still don't know (one per line)", "area"], ["summary", "Short summary", "area"],
+];
+function clientForm(id) {
+  const c = id ? S.accounts.find((a) => a.id === id).client : { currency: "GBP", health: "Green", stage: "Onboarding", autoRenew: "No", owner: "Viraf" };
+  const f = ([k, label, t]) => !label ? `<h3>${k}</h3>` : `<label class="${t === "area" ? "full" : ""}">${label}${Array.isArray(t) ? `<select id="f_${k}">${t.map((o) => `<option ${c[k] === o ? "selected" : ""}>${o}</option>`).join("")}</select>` : t === "area" ? `<textarea id="f_${k}" rows="3">${esc(c[k])}</textarea>` : `<input id="f_${k}" type="${t || "text"}" ${t === "number" ? 'min="0" step="any"' : ""} value="${esc(c[k] ?? "")}">`}</label>`;
+  document.getElementById("modalBox").innerHTML = `<h2>${id ? "Edit client" : "Add a new client"}</h2>` + (ADMIN ? "" : `<p class="meta">Read-only view: saving needs the owner's key (open the CRM with ?key=…).</p>`)
+    + `<div class="form">${FIELDS.map(f).join("")}</div><p class="meta" id="fMsg"></p><div style="margin-top:12px;text-align:right;display:flex;gap:8px;justify-content:flex-end"><button onclick="closeModal()">Cancel</button><button class="primary" onclick="saveClient(${id ? `'${id}'` : ""})">Save client</button></div>`;
+  document.getElementById("modal").classList.add("show");
+}
+async function saveClient(id) {
+  const body = { id }; FIELDS.forEach(([k, l]) => { if (l) body[k] = document.getElementById("f_" + k).value; });
+  if (!body.name.trim() || !(Number(body.annualValue) > 0) || !body.renewalDate) return (document.getElementById("fMsg").textContent = "Please fill in client name, contract value and renewal date.");
+  const r = await fetch("/api/client", { method: "POST", headers: { "content-type": "application/json", "x-admin-key": ADMIN }, body: JSON.stringify(body) });
+  const j = await r.json(); if (!r.ok) return (document.getElementById("fMsg").textContent = j.error);
+  closeModal(); await load(); current = j.saved; go("detail");
+}
+async function deleteClient(id) {
+  if (!confirm("Delete this client from the CRM? This cannot be undone.")) return;
+  const r = await fetch("/api/client", { method: "DELETE", headers: { "content-type": "application/json", "x-admin-key": ADMIN }, body: JSON.stringify({ id }) });
+  if (!r.ok) return alert((await r.json()).error);
+  current = S.accounts[0].id; await load(); go("overview");
+}
 
 // ---------- notes (owner only) ----------
 async function postNote(n) {
