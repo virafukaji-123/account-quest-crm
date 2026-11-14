@@ -3,7 +3,7 @@
   {
    "kind": "risk",
    "title": "Single point of contact is leaving",
-   "text": "Every call since May has been with Rhys Calder alone, and he leaves the programme in January with no successor named. The renewal (28 Feb 2027, no automatic renewal, \u00a3350k) has no other sponsor on our side. Evidence: champion_leaves signal, profile, calls_index."
+   "text": "Every call since May has been with Rhys Calder alone, and he leaves the programme in January with no successor named. The renewal (28 Feb 2027, no automatic renewal, £350k) has no other sponsor on our side. Evidence: champion_leaves signal, profile, calls_index."
   },
   {
    "kind": "risk",
@@ -30,7 +30,7 @@
   {
    "kind": "next_step",
    "title": "Protect the insurance discount with Julian Tate",
-   "text": "Meet Julian Tate (insurance and risk) to confirm the 6% premium cut across nine plants (~\u20ac180k a year) and what patrol level the insurer expects. This is the only verified financial benefit and is larger than the contract value (\u20ac140k). Build the renewal case on it instead of the unproven \u20ac1.2M claim. Evidence: jt_prem_2, sr_roi_0."
+   "text": "Meet Julian Tate (insurance and risk) to confirm the 6% premium cut across nine plants (~€180k a year) and what patrol level the insurer expects. This is the only verified financial benefit and is larger than the contract value (€140k). Build the renewal case on it instead of the unproven €1.2M claim. Evidence: jt_prem_2, sr_roi_0."
   },
   {
    "kind": "task",
@@ -41,6 +41,28 @@
    "kind": "next_step",
    "title": "Answer Group Finance with cost and value per plant",
    "text": "Reply to Group Finance's 8 October request with the renewal cost per plant alongside usage and value per plant, so idle docks are discussed openly rather than cut blindly. Agree the renewal scope before 31 Jan 2027. Evidence: emails/2026-10-08_finance_mailbox, ba_cost_2, usage_weekly."
+  }
+ ],
+ "K": [
+  {
+   "kind": "risk",
+   "title": "Paid, never flown, board vote on 17 Nov",
+   "text": "Kestrel Estates paid £14,000 for one dock (KE-D01). It has flown zero times in 7 weeks online and was never commissioned. Residents already ask why they paid. The residents' board votes on the security budget on 17 Nov. Evidence: usage_weekly.csv, devices.json, k_board_doubts_14b, k_board_pays_14b."
+  },
+  {
+   "kind": "next_step",
+   "title": "Go-live plan to Dana by 16 Nov",
+   "text": "Call Dana Whitfield, apologise for no reply since 19 Oct, and agree a written go-live plan for night patrols of the north gate: insurer declared, commissioning flight booked, two staff trained. Evidence: emails/2026-10-19_dana_when.txt, k_need_entrances_14b."
+  },
+  {
+   "kind": "task",
+   "title": "Declare the dock to the insurer before any flight",
+   "text": "Ask Lucy Pratt (broker) to notify the insurer about the dock before use, as the property insurance requires. Evidence: k_insurer_not_told_14b, K_insurance_schedule_14b."
+  },
+  {
+   "kind": "next_step",
+   "title": "Pilot certification for two estate staff (£4,000)",
+   "text": "Offer the pilot certification course to Dana for two staff. Without it nobody at the estate can fly the dock. Needs a board vote (Graham Okafor). Evidence: k_training_14b, k_no_pilot_14b, k_board_pays_14b."
   }
  ]
 }
