@@ -1,5 +1,5 @@
 const { load, slotTtl, usingRedis } = require("../lib/store");
-const { analyse, gameDate } = require("../lib/engine");
+const { analyse, gameDate, accountIds } = require("../lib/engine");
 const briefs = require("../lib/briefs.json");
 const drafts = require("../lib/drafts.json");
 const answers = require("../lib/answers.json");
@@ -16,7 +16,7 @@ module.exports = async (req, res) => {
   const today = gameDate(s);
   res.setHeader("cache-control", "no-store");
   res.json({
-    accounts: ["A", "B"].map((id) => {
+    accounts: accountIds(s).filter((id) => s.paperwork?.[id]).map((id) => {
       const a = analyse(s, id, today);
       a.events = a.events.map((e) => ({ ...e, recorded: recorded.find((r) => r.id === e.id)?.recorded || null }));
       return { ...a, brief: briefs[id] || null, answers: answers[id] || null, drafts: drafts[id] || [] };
