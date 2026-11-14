@@ -40,6 +40,16 @@ function customClient(s, id, c, today) {
   return a;
 }
 
+// Status: what the owner set, or a suggestion from the numbers until they set one.
+function withStatus(s, a) {
+  const saved = s.statuses?.[a.id];
+  const suggest = a.custom && ["Onboarding", "At risk"].includes(a.client?.stage) ? a.client.stage
+    : a.fleet.total && a.fleet.never === a.fleet.total ? "Onboarding"
+    : a.renewal && a.renewal.daysLeft <= 120 ? "Due for renewal"
+    : a.health.rating === "Red" ? "At risk" : "Active";
+  return { ...a, status: saved ? { ...saved, suggested: false } : { status: suggest, suggested: true, history: [] } };
+}
+
 module.exports = async (req, res) => {
   const s = await load();
   // Events the game returned earlier are kept as history (lib/history.json), marked as recorded.
@@ -54,7 +64,7 @@ module.exports = async (req, res) => {
       const a = analyse(s, id, today);
       a.events = a.events.map((e) => ({ ...e, recorded: recorded.find((r) => r.id === e.id)?.recorded || null }));
       return { ...a, brief: briefs[id] || autoBrief(a), answers: answers[id] || autoAnswers(a), drafts: drafts[id] || [] };
-    }).concat(Object.entries(s.customClients || {}).map(([id, c]) => customClient(s, id, c, today))),
+    }).concat(Object.entries(s.customClients || {}).map(([id, c]) => customClient(s, id, c, today))).map((a) => withStatus(s, a)),
     newEvents: s.newEvents || [],
     log: s.log.slice(0, 15).map((l) => (l.error ? { ...l, error: redact(l.error) } : l)),
     noteQueue: s.noteQueue.map((n) => ({ account: n.account, kind: n.kind, title: n.title })),
