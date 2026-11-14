@@ -587,5 +587,204 @@
     ]
    }
   ]
+ },
+ "K": {
+  "worth": {
+   "backed": [
+    {
+     "deal": "Get the north-entrance dock flying night patrols",
+     "id": "k_golive_14b",
+     "value": "£14,000 a year",
+     "basis": "Order: £14,000 a year, 14 Sep 2026 – 13 Sep 2027, paid in full by the reseller, no automatic renewal. Blocked: no pilot, never commissioned, insurer not told.",
+     "ids": [
+      "k_golive_14b",
+      "contract.txt",
+      "invoices.json"
+     ]
+    },
+    {
+     "deal": "Pilot certification course for two estate staff",
+     "id": "k_training_14b",
+     "value": "£4,000",
+     "basis": "Open offer, to pitch to Dana Whitfield. Not in the reseller's order, and needed before the dock can fly.",
+     "ids": [
+      "k_training_14b",
+      "contract.txt"
+     ]
+    }
+   ],
+   "unbacked": [
+    {
+     "item": "Second dock for the south entrance",
+     "why": "Dana's wish only, if the north gate works. The south entrance was never assessed for coverage and no price is on file.",
+     "ids": [
+      "k_south_14b",
+      "k_south_wish_14b",
+      "k_south_unassessed_14b"
+     ]
+    },
+    {
+     "item": "\"Everyone here is excited\"",
+     "why": "Dana's claim. The board chair says some residents already ask why they paid for a drone that never flew.",
+     "ids": [
+      "k_keen_14b",
+      "k_board_doubts_14b"
+     ]
+    }
+   ]
+  },
+  "power": [
+   {
+    "deal": "Go-live and renewal (k_golive_14b)",
+    "decides": "The residents' board, chaired by Graham Okafor, votes on any spend beyond the original purchase, including the security budget on 17 Nov.",
+    "pays": "The estate paid the installer; FlytBase invoiced the reseller, not the estate.",
+    "uses": "Dana Whitfield, estate manager, and the two staff to be trained.",
+    "blocks": "The insurer (via Lucy Pratt) until the dock is declared; residents who doubt the spend.",
+    "stance": [
+     [
+      "Dana Whitfield",
+      "Warm. Wants it working and would add a second dock."
+     ],
+     [
+      "Graham Okafor",
+      "Neutral. Holds the vote; reports residents' doubts."
+     ],
+     [
+      "Lucy Pratt",
+      "Neutral. Needs the dock declared before use."
+     ]
+    ],
+    "ids": [
+     "k_board_pays_14b",
+     "k_board_doubts_14b",
+     "k_insurer_not_told_14b",
+     "invoices.json",
+     "profile.json"
+    ]
+   }
+  ],
+  "first": [
+   {
+    "rank": 1,
+    "move": "Call Dana Whitfield: apologise for the silence since 19 Oct, confirm the real need (night patrol of the entrances) and agree a written go-live plan.",
+    "owner": "Viraf",
+    "by": "16 Nov 2026",
+    "deal": "k_golive_14b",
+    "ids": [
+     "emails/2026-10-19_dana_when.txt",
+     "k_need_entrances_14b"
+    ]
+   },
+   {
+    "rank": 2,
+    "move": "Ask Lucy Pratt to declare the dock to the insurer, and book a FlytBase commissioning flight with a certified pilot.",
+    "owner": "Viraf, with Pranjal Suyal (Lead Solutions Engineer)",
+    "by": "16 Nov 2026",
+    "deal": "k_golive_14b",
+    "ids": [
+     "k_insurer_not_told_14b",
+     "k_not_commissioned_14b",
+     "devices.json"
+    ]
+   },
+   {
+    "rank": 3,
+    "move": "Send Graham Okafor a one-page update for the board: what went wrong, the go-live date, and the £4,000 pilot course for two staff.",
+    "owner": "Viraf",
+    "by": "17 Nov 2026",
+    "deal": "k_golive_14b, k_training_14b",
+    "ids": [
+     "k_board_pays_14b",
+     "k_board_doubts_14b",
+     "k_training_14b"
+    ]
+   }
+  ],
+  "wrong": [
+   {
+    "type": "Deadline at risk",
+    "what": "Go-live plan promised to Dana is due 16 Nov; the board votes on the security budget on 17 Nov.",
+    "turnsBad": "16–17 Nov 2026.",
+    "ids": [
+     "get_new_account → deadlines",
+     "k_board_pays_14b"
+    ]
+   },
+   {
+    "type": "Deal turning bad",
+    "what": "Paid £14,000, never flown in 7 weeks online. Residents already ask why they paid for it.",
+    "turnsBad": "At the 17 Nov board vote.",
+    "ids": [
+     "usage_weekly.csv",
+     "devices.json",
+     "k_board_doubts_14b"
+    ]
+   },
+   {
+    "type": "Stuck",
+    "what": "Nobody can fly it: no certified pilot, never commissioned, insurer not told.",
+    "turnsBad": "Already stuck.",
+    "ids": [
+     "k_no_pilot_14b",
+     "k_not_commissioned_14b",
+     "k_insurer_not_told_14b"
+    ]
+   },
+   {
+    "type": "Going cold",
+    "what": "Dana's email of 19 Oct got only an automatic reply; the installer no longer answers.",
+    "turnsBad": "Already cold.",
+    "ids": [
+     "emails/2026-10-19_dana_when.txt",
+     "k_installer_gone_14b"
+    ]
+   }
+  ],
+  "unknown": [
+   {
+    "gap": "Whether the north gate position covers both entrances",
+    "why": "The south entrance was never assessed; a second dock may be needed for the real need.",
+    "who": "Pranjal Suyal (site check) with Dana",
+    "ids": [
+     "k_south_unassessed_14b",
+     "k_need_entrances_14b"
+    ]
+   },
+   {
+    "gap": "Who at the estate will be trained to fly",
+    "why": "The pilot course needs two named staff before go-live.",
+    "who": "Dana Whitfield",
+    "ids": [
+     "k_no_pilot_14b",
+     "k_training_14b"
+    ]
+   },
+   {
+    "gap": "What the board needs to see to keep the budget",
+    "why": "The 17 Nov vote decides whether the estate keeps spending on security.",
+    "who": "Graham Okafor",
+    "ids": [
+     "k_board_pays_14b",
+     "k_board_doubts_14b"
+    ]
+   },
+   {
+    "gap": "The insurer's conditions once the dock is declared",
+    "why": "The dock must not fly before cover is confirmed.",
+    "who": "Lucy Pratt",
+    "ids": [
+     "k_insurer_not_told_14b"
+    ]
+   },
+   {
+    "gap": "What the installer promised the estate",
+    "why": "The order notes say 'mapping the whole estate', which is not what they need.",
+    "who": "Dana Whitfield; the installer (not answering)",
+    "ids": [
+     "deal_history.json",
+     "k_installer_gone_14b"
+    ]
+   }
+  ]
  }
 }
