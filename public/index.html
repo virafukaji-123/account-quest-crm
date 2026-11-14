@@ -87,40 +87,104 @@
   .apart { margin-top:10px; background:#f8f6f1; border:1px dashed var(--line); border-radius:10px; padding:8px 12px; }
   .powercard { border:1px solid var(--line); border-radius:10px; padding:8px 12px; margin-bottom:8px; } .powercard h4 { margin:2px 0 6px; font-size:14px; }
   td.k { color:var(--muted); width:150px; white-space:nowrap; }
+
+  nav.views { display:flex; gap:6px; flex-wrap:wrap; margin:18px 0 6px; }
+  nav.views button { border-radius:20px; padding:7px 16px; font-weight:600; }
+  nav.views button.on { background:var(--ink); color:#fff; border-color:var(--ink); }
+  .grid2 { display:grid; grid-template-columns:1fr 1fr; gap:14px; } @media (max-width:800px){ .grid2 { grid-template-columns:1fr; } }
+  .kpi { display:grid; grid-template-columns:repeat(2,1fr); gap:8px; margin:10px 0; }
+  .kpi div { background:#faf9f6; border:1px solid var(--line); border-radius:10px; padding:8px 10px; } .kpi small { display:block; color:var(--muted); font-size:12px; } .kpi b { font-size:17px; }
+  .bottom { background:#f0fdfa; border-left:4px solid var(--accent); padding:10px 14px; border-radius:8px; margin:6px 0 2px; }
+  .acct { font-size:12px; font-weight:700; color:#fff; background:var(--accent); border-radius:6px; padding:1px 7px; white-space:nowrap; }
+  .acct.B { background:#7c3aed; }
+  .chart { width:100%; height:auto; } .chart text { font:11px Segoe UI,system-ui,sans-serif; fill:#6b7280; }
+  .legend span { display:inline-block; margin-right:14px; font-size:12px; color:var(--muted); } .legend i { display:inline-block; width:10px; height:10px; border-radius:2px; margin-right:5px; vertical-align:middle; }
+  .ids { display:none; } body.src .ids { display:block; }
+  .switch { font-size:13px; color:var(--muted); display:flex; align-items:center; gap:6px; } .switch input { width:auto; }
+  @media print { header button, nav.views, .switch, details.sec, .banner { display:none !important; } .view { display:block !important; page-break-after:always; } body { background:#fff; } .card { break-inside:avoid; } }
 </style>
 </head>
 <body>
 <header><div class="wrap">
-  <h1>Account Quest CRM</h1>
+  <h1>Account Quest CRM <span class="meta" style="font-weight:400">· FlytBase key accounts</span></h1>
+  <label class="switch"><input type="checkbox" id="srcToggle" onchange="document.body.classList.toggle('src', this.checked)"> Show sources</label>
   <span class="status" id="status">Loading…</span>
+  <button onclick="window.print()">Print / PDF</button>
 </div></header>
-
 <div class="wrap">
   <div class="banner" id="banner"></div>
-  <div class="tabs" id="tabs"></div>
+  <nav class="views" id="nav"></nav>
   <div id="main"><div class="card">Loading the accounts…</div></div>
 </div>
-
 <div class="modal" id="modal" onclick="if(event.target===this)closeModal()"><div class="box" id="modalBox"></div></div>
-
 <script>
-let S = null, current = "A", openState = {}, seenEvents = null;
+let S = null, U = null, view = "overview", current = "B", openState = {}, seenEvents = null;
 let ADMIN = ""; try { const k = new URLSearchParams(location.search).get("key"); if (k) localStorage.setItem("aqKey", k); ADMIN = localStorage.getItem("aqKey") || ""; } catch {}
 const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;" }[c]));
 const ago = (iso) => { if (!iso) return "never"; const m = Math.round((Date.now() - new Date(iso)) / 60000); return m < 1 ? "just now" : m < 60 ? `${m} min ago` : `${Math.round(m / 60)} h ago`; };
+const fmtDate = (d) => d ? new Date(d).toLocaleDateString("en-GB", { day:"numeric", month:"short", year:"numeric" }) : "";
+const money = (v, cur) => (cur === "GBP" ? "£" : "€") + Math.round(v).toLocaleString("en-GB");
+const chips = (ids) => (ids && ids.length ? `<div class="ids">${ids.map((i) => `<code>${esc(i)}</code>`).join(" ")}</div>` : "");
+const tag = (a) => `<span class="acct ${a.id}">${a.id === "A" ? "Police" : "Industrial"}</span>`;
 const kindLabel = { risk:"Risk", task:"Task", next_step:"Next step", note:"Note" };
 const statusLabel = { claim:"Claim – not checked", told:"Told to us", verified:"Checked ✓" };
 const A = () => S.accounts.find((a) => a.id === current);
-const fmtDate = (d) => d ? new Date(d).toLocaleDateString("en-GB", { day:"numeric", month:"short", year:"numeric" }) : "";
+const atRisk = (a) => { const f = a.fleet, r = a.renewal; const per = r.value / f.total, idle = f.total - f.flyingNow; return { per, idle, value: per * idle }; };
+function sec(key, title, count, inner, open) { const o = openState[key] ?? open;
+  return `<details class="sec" data-key="${key}" ${o ? "open" : ""}><summary>${title}<span class="count">${count ?? ""}</span></summary><div class="body">${inner}</div></details>`; }
+const VIEWS = [["overview","Overview"],["risks","Risks"],["opps","Opportunities"],["usage","Drone usage"],["detail","Account detail"]];
 
-function sec(key, title, count, inner, open) {
-  const o = openState[key] ?? open;
-  return `<details class="sec" data-key="${key}" ${o ? "open" : ""}><summary>${title}<span class="count">${count ?? ""}</span></summary><div class="body">${inner}</div></details>`;
+// ---------- Overview ----------
+function overview() {
+  return `<div class="grid2">${S.accounts.map((a) => { const r = atRisk(a), q = a.answers;
+    return `<div class="card"><h2>${tag(a)} ${esc(a.name)} <span class="badge ${a.health.rating}">${a.health.rating}</span></h2>
+      <div class="bottom">${esc(a.brief?.headline || "")}</div>
+      <div class="kpi"><div><small>Contract</small><b>${esc(a.renewal.label)}</b></div><div><small>Renewal</small><b>${fmtDate(a.renewal.date)}</b><br><span class="meta">${a.renewal.daysLeft} days · not automatic</span></div>
+      <div><small>Docks flying regularly now</small><b>${a.fleet.flyingNow} of ${a.fleet.total}</b> <button class="linkbtn" onclick="current='${a.id}';trace('fleet')">trace</button></div><div><small>Renewal value at risk</small><b>${money(r.value, a.renewal.currency)}</b><br><span class="meta">${r.idle} idle docks × ${money(r.per, a.renewal.currency)}</span></div></div>
+      <b>Top risks</b><ul class="clean">${q.wrong.slice(0, 3).map((w) => `<li>${esc(w.what)}</li>`).join("")}</ul>
+      <b style="display:block;margin-top:8px">First move</b><div>${esc(q.first[0].move)} <span class="meta">– ${esc(q.first[0].owner)}, by ${esc(q.first[0].by)}</span></div>
+      <div style="margin-top:10px"><button class="small" onclick="current='${a.id}';go('detail')">Open account detail →</button></div></div>`; }).join("")}</div>
+    <div class="card meta">Health = risk points from warning signs in the game data (under 20 Green, 20–49 Amber, 50+ Red). Renewal value at risk = contract value per dock × docks not flying regularly in the last 2 weeks.</div>`;
 }
-
-// ---------- the five answers (the game's own questions) ----------
-const chips = (ids) => (ids && ids.length ? `<div class="ids">${ids.map((i) => `<code>${esc(i)}</code>`).join(" ")}</div>` : "");
-const money = (v, cur) => (cur === "GBP" ? "£" : "€") + Math.round(v).toLocaleString("en-GB");
+// ---------- Risks ----------
+function risks() {
+  const rows = S.accounts.flatMap((a) => a.answers.wrong.map((w) => ({ a, ...w })));
+  const order = ["Deadline at risk","Deal turning bad","Person leaving","Going cold","Stuck"];
+  rows.sort((x, y) => order.indexOf(x.type) - order.indexOf(y.type));
+  return `<div class="card"><h2>Risks across both accounts</h2><table class="t ans"><tr><th>Account</th><th>Risk</th><th>When it turns bad</th></tr>
+    ${rows.map((x) => `<tr><td>${tag(x.a)}</td><td><span class="tag risk">${esc(x.type)}</span> ${esc(x.what)}${chips(x.ids)}</td><td>${esc(x.turnsBad)}</td></tr>`).join("")}</table></div>
+    <div class="grid2">${S.accounts.map((a) => `<div class="card"><h2>${tag(a)} What we do first</h2><table class="t ans"><tr><th>#</th><th>Move</th><th>Owner · by</th></tr>
+      ${a.answers.first.map((m) => `<tr><td><b>${m.rank}</b></td><td>${esc(m.move)}${chips(m.ids)}</td><td>${esc(m.owner)}<br><b>${esc(m.by)}</b></td></tr>`).join("")}</table></div>`).join("")}</div>`;
+}
+// ---------- Opportunities ----------
+function opps() {
+  return S.accounts.map((a) => { const w = a.answers.worth, r = atRisk(a);
+    return `<div class="card"><h2>${tag(a)} ${esc(a.name)}</h2><table class="t ans"><tr><th>Opportunity</th><th>Value</th><th>Confidence</th><th>Basis</th></tr>
+      ${w.backed.map((d) => `<tr><td><b>${esc(d.deal)}</b></td><td><b>${esc(d.value)}</b></td><td><span class="tag verified">Backed</span></td><td>${esc(d.basis)}${chips(d.ids)}</td></tr>`).join("")}
+      <tr class="calc"><td><b>Protect the renewal</b></td><td><b>${money(r.value, a.renewal.currency)} at risk</b></td><td><span class="tag risk">At risk now</span></td><td>${r.idle} of ${a.fleet.total} docks not flying regularly × ${money(r.per, a.renewal.currency)} a dock. Live from usage data.</td></tr>
+      ${w.unbacked.map((u) => `<tr><td>${esc(u.item)}</td><td>–</td><td><span class="tag claim">Unverified</span></td><td>${esc(u.why)}${chips(u.ids)}</td></tr>`).join("")}</table></div>`; }).join("")
+    + `<div class="card meta">Backed = value from the contract or an offer on file. Unverified = rests on one person's word; not counted until checked.</div>`;
+}
+// ---------- Drone usage ----------
+function chart(weeks) {
+  const W = 900, H = 220, P = 34, n = weeks.length, max = Math.max(1, ...weeks.map((w) => w.flights)), dmax = Math.max(1, ...weeks.map((w) => w.docks));
+  const bw = (W - P * 2) / n;
+  const bars = weeks.map((w, i) => `<rect x="${P + i * bw + 2}" y="${H - P - (w.flights / max) * (H - P * 2)}" width="${bw - 4}" height="${(w.flights / max) * (H - P * 2)}" fill="#99d5cf"><title>${w.week}: ${w.flights} flights</title></rect>`).join("");
+  const line = weeks.map((w, i) => `${P + i * bw + bw / 2},${H - P - (w.docksRegular / dmax) * (H - P * 2)}`).join(" ");
+  const labels = weeks.map((w, i) => (i % Math.ceil(n / 8) === 0 ? `<text x="${P + i * bw + bw / 2}" y="${H - 12}" text-anchor="middle">${new Date(w.week).toLocaleDateString("en-GB",{day:"numeric",month:"short"})}</text>` : "")).join("");
+  return `<svg class="chart" viewBox="0 0 ${W} ${H}">${bars}<polyline points="${line}" fill="none" stroke="#b91c1c" stroke-width="2.5"/>
+    <text x="${P}" y="14">${max} flights</text><text x="${W - P}" y="14" text-anchor="end" fill="#b91c1c">${dmax} docks</text>${labels}</svg>
+    <div class="legend"><span><i style="background:#99d5cf"></i>Flights per week</span><span><i style="background:#b91c1c"></i>Docks flying regularly (2+ flights that week)</span></div>`;
+}
+function usage() {
+  if (!U) return `<div class="card">Loading usage…</div>`;
+  return S.accounts.map((a) => { const wk = U[a.id].weeks.slice(-16), l4 = wk.slice(-4), p4 = wk.slice(-8, -4);
+    const sum = (x) => x.reduce((t, w) => t + w.flights, 0), now = sum(l4), before = sum(p4), ch = before ? Math.round((now - before) / before * 100) : 0;
+    return `<div class="card"><h2>${tag(a)} ${esc(a.name)} – drone usage</h2>
+      <div class="kpi" style="grid-template-columns:repeat(4,1fr)"><div><small>Flights, last 4 weeks</small><b>${now}</b></div><div><small>vs previous 4 weeks</small><b style="color:${ch < 0 ? "var(--red)" : "var(--green)"}">${ch > 0 ? "+" : ""}${ch}%</b></div>
+      <div><small>Docks flying regularly now</small><b>${a.fleet.flyingNow} of ${a.fleet.total}</b></div><div><small>Never flown</small><b>${a.fleet.never}</b></div></div>
+      ${chart(wk)}<div class="meta">Last 16 weeks on file (to week of ${fmtDate(wk[wk.length - 1]?.week)}). <button class="linkbtn" onclick="current='${a.id}';trace('fleet')">See every dock</button>${chips([U[a.id].source])}</div></div>`; }).join("");
+}
 function fiveAnswers(a) {
   const q = a.answers; if (!q) return [];
   const f = a.fleet, r = a.renewal;
@@ -151,48 +215,37 @@ function fiveAnswers(a) {
   ];
 }
 
-function render() {
+
+// ---------- Account detail ----------
+function detail() {
   const a = A(), f = a.fleet, h = a.health;
-  document.getElementById("tabs").innerHTML = S.accounts.map((x) => `<button class="tab ${x.id === current ? "on" : ""}" onclick="pick('${x.id}')">
-    <b>${esc(x.name)} <span class="badge ${x.health.rating}">${x.health.rating}</span></b><span>${esc(x.brief?.tabline || x.story || "")}</span></button>`).join("");
-
-  let html = `<div class="card">
-    <h2><span class="badge ${h.rating}">${h.rating} · ${h.score} risk points</span></h2>
-    <div class="headline">${esc(a.brief?.headline || a.story || "")}</div>
-    <div class="nums">
-      <div class="num"><small>Contract</small><b>${esc(a.renewal?.label || "–")}</b><br><button class="linkbtn" onclick="trace('renewal')">where from?</button></div>
-      <div class="num"><small>Renewal</small><b>${fmtDate(a.renewal?.date)}</b><br><span class="meta">${a.renewal?.daysLeft} days · not automatic</span></div>
-      <div class="num"><small>Docks flying regularly now</small><b>${f.flyingNow} of ${f.total}</b><br><button class="linkbtn" onclick="trace('fleet')">trace this number</button></div>
-      <div class="num"><small>Open requests nobody owns</small><b>${a.openRequests.length}</b><br><button class="linkbtn" onclick="trace('requests')">see them</button></div>
-    </div></div>`;
-
-  html += `<div class="card"><h2>The five answers</h2><div class="meta" style="margin:-4px 0 6px">Grey codes are the ids each line rests on: game facts, deals, events, tickets and files.</div>${fiveAnswers(a).map((x) => `<div class="answer"><h3>${x.q}</h3>${x.a}<div class="src">How it decides: ${esc(x.src)}</div></div>`).join("")}</div>`;
-
-  // events
+  let html = `<div style="display:flex;gap:8px;margin:6px 0 12px">${S.accounts.map((x) => `<button class="${x.id === current ? "primary" : ""}" onclick="current='${x.id}';render()">${esc(x.name)}</button>`).join("")}</div>`;
+  html += `<div class="card"><h2>${tag(a)} ${esc(a.name)} <span class="badge ${h.rating}">${h.rating} · ${h.score} risk points</span></h2><div class="headline">${esc(a.brief?.headline || "")}</div>
+    <div class="nums"><div class="num"><small>Contract</small><b>${esc(a.renewal.label)}</b><br><button class="linkbtn" onclick="trace('renewal')">where from?</button></div>
+    <div class="num"><small>Renewal</small><b>${fmtDate(a.renewal.date)}</b><br><span class="meta">${a.renewal.daysLeft} days · not automatic</span></div>
+    <div class="num"><small>Docks flying regularly now</small><b>${f.flyingNow} of ${f.total}</b><br><button class="linkbtn" onclick="trace('fleet')">trace this number</button></div>
+    <div class="num"><small>Open requests nobody owns</small><b>${a.openRequests.length}</b><br><button class="linkbtn" onclick="trace('requests')">see them</button></div></div></div>`;
+  html += `<div class="card"><h2>The five answers</h2>${fiveAnswers(a).map((x) => `<div class="answer"><h3>${x.q}</h3>${x.a}<div class="src">How it decides: ${esc(x.src)}</div></div>`).join("")}</div>`;
   const newIds = new Set((S.newEvents || []).map((e) => e.id));
-  html += sec("events", "🔔 Events since you took over", a.events.length, a.events.length ? a.events.map((e) => `<div class="item"><b>${esc(e.title)}</b>${newIds.has(e.id) ? '<span class="tag new">NEW</span>' : ""}${e.recorded ? `<span class="tag">recorded from the game ${new Date(e.recorded).toLocaleString("en-GB",{day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"})}</span>` : ""} <span class="meta">· ${fmtDate(e.dated)}</span><br>${esc(e.summary)}
-    ${e.records?.length ? `<details><summary class="meta" style="cursor:pointer">Original email / data</summary>${e.records.map((r) => `<pre>${esc(r.text)}</pre>`).join("")}</details>` : ""}</div>`).join("") : '<div class="empty">Nothing yet.</div>', true);
-
-  // notes
-  const sent = S.notesSent.filter((n) => n.account === current).map((n) => n.title);
-  const queued = S.noteQueue.filter((n) => n.account === current).map((n) => n.title);
+  html += sec("events", "🔔 Events since you took over", a.events.length, a.events.map((e) => `<div class="item"><b>${esc(e.title)}</b>${newIds.has(e.id) ? '<span class="tag new">NEW</span>' : ""} <span class="meta">· ${fmtDate(e.dated)}</span><br>${esc(e.summary)}
+    ${e.records?.length ? `<details><summary class="meta" style="cursor:pointer">Original email / data</summary>${e.records.map((r) => `<pre>${esc(r.text)}</pre>`).join("")}</details>` : ""}</div>`).join("") || '<div class="empty">Nothing yet.</div>', false);
+  const sent = S.notesSent.filter((n) => n.account === current).map((n) => n.title), queued = S.noteQueue.filter((n) => n.account === current).map((n) => n.title);
   html += sec("notes", "📝 Notes for the judges", `${sent.length} sent`, a.drafts.map((d, i) => {
     const st = sent.includes(d.title) ? `<span class="meta ok">✓ sent</span>` : queued.includes(d.title) ? `<span class="meta">⏳ queued</span>` : ADMIN ? `<button class="small primary" onclick="sendDraft(${i})">Send</button>` : "";
-    return `<div class="item" style="display:flex;gap:12px"><div style="flex:1"><b>${esc(d.title)}</b><span class="tag ${d.kind}">${kindLabel[d.kind]}</span><br>${esc(d.text)}</div>${st}</div>`;
-  }).join("") + (ADMIN ? `<div class="item"><b>Write your own</b><div style="display:grid;grid-template-columns:160px 1fr;gap:8px"><select id="nKind"><option value="next_step">Next step</option><option value="risk">Risk</option><option value="task">Task</option><option value="note">Note</option></select><input id="nTitle" placeholder="Short title"></div><textarea id="nText" placeholder="What, who, by when, and the evidence" style="margin-top:6px"></textarea><button class="primary" style="margin-top:6px" onclick="sendOwn()">Queue note</button></div>` : `<div class="meta">Read-only view. The owner sends notes with a private key.</div>`), false);
-
-  // what people told us
+    return `<div class="item" style="display:flex;gap:12px"><div style="flex:1"><b>${esc(d.title)}</b><span class="tag ${d.kind}">${kindLabel[d.kind]}</span><br>${esc(d.text)}</div>${st}</div>`; }).join("")
+    + (ADMIN ? `<div class="item"><b>Write your own</b><div style="display:grid;grid-template-columns:160px 1fr;gap:8px"><select id="nKind"><option value="next_step">Next step</option><option value="risk">Risk</option><option value="task">Task</option><option value="note">Note</option></select><input id="nTitle" placeholder="Short title"></div><textarea id="nText" placeholder="What, who, by when, and the evidence" style="margin-top:6px"></textarea><button class="primary" style="margin-top:6px" onclick="sendOwn()">Queue note</button></div>` : `<div class="meta">Read-only view. The owner sends notes with a private key.</div>`), false);
   html += sec("facts", "💬 What people told us", a.facts.length, a.facts.map((x) => `<div class="item">"${esc(x.text)}"<span class="tag ${x.status}">${statusLabel[x.status] || x.status}</span><br><span class="meta">${esc(x.said_by)}</span></div>`).join(""), false);
-  // deals
-  html += sec("deals", "💼 Deals and offers", a.opportunities.length + a.offers.length, a.opportunities.map((o) => `<div class="item"><b>${esc(o.title)}</b> <span class="meta">· ${esc(o.stage)}</span>${o.deadline ? `<br><span class="err">Deadline: ${esc(o.deadline.text)}</span>` : ""}</div>`).join("") + a.offers.map((o) => `<div class="item"><b>Offer: ${esc(o.title)}</b> <span class="meta">· ${Number(o.value).toLocaleString("en-GB")} · to ${esc(o.pitch_to)} · ${esc(o.status)}</span></div>`).join(""), false);
-  // behind the scenes
   html += sec("tech", "⚙️ Behind the scenes", "", `<div class="meta">Game date ${fmtDate(S.gameDate)} · storage: ${esc(S.storage)} · accounts fetched ${ago(S.dataAsOf.accounts)} · events checked ${ago(S.dataAsOf.signals)}</div>
     <div class="log" style="margin-top:8px">${S.log.map((l) => `<div><span class="${l.ok ? "ok" : "err"}">${l.ok ? "✓" : "✗"}</span> ${esc(l.call)} <span class="meta">${ago(l.at)}</span>${l.error ? ` <span class="err">${esc(l.error)}</span>` : ""}</div>`).join("") || '<div class="empty">No calls yet</div>'}</div>`, false);
-
+  return html;
+}
+function go(v) { view = v; render(); window.scrollTo(0, 0); }
+function render() {
+  document.getElementById("nav").innerHTML = VIEWS.map(([k, t]) => `<button class="${k === view ? "on" : ""}" onclick="go('${k}')">${t}</button>`).join("");
+  const html = { overview, risks, opps, usage, detail }[view]();
   document.getElementById("main").innerHTML = html;
   document.querySelectorAll("details.sec").forEach((d) => d.addEventListener("toggle", () => (openState[d.dataset.key] = d.open)));
 }
-
 // ---------- tracing a number back to its source ----------
 function trace(what) {
   const a = A(); let h = "";
@@ -229,21 +282,19 @@ async function sendOwn() {
 // ---------- live updates ----------
 function showNew(events) {
   const all = S.accounts.flatMap((a) => a.events.map((e) => ({ ...e, acc: a.name })));
-  const fresh = all.filter((e) => events.includes(e.id));
   const el = document.getElementById("banner");
-  el.innerHTML = `<b>🔔 New event picked up:</b> ${fresh.map((e) => `${esc(e.acc)} – ${esc(e.title)}`).join("; ")}. The numbers below have been recalculated.`;
+  el.innerHTML = `<b>🔔 New event picked up:</b> ${all.filter((e) => events.includes(e.id)).map((e) => `${esc(e.acc)} – ${esc(e.title)}`).join("; ")}. The numbers have been recalculated.`;
   el.classList.add("show");
 }
 async function load() {
-  S = await (await fetch("/api/state")).json();
+  [S, U] = await Promise.all([fetch("/api/state").then((r) => r.json()), fetch("/api/usage").then((r) => r.json()).catch(() => null)]);
   const ids = S.accounts.flatMap((a) => a.events.map((e) => e.id));
   if (seenEvents && ids.some((id) => !seenEvents.has(id))) showNew(ids.filter((id) => !seenEvents.has(id)));
   seenEvents = new Set(ids);
-  document.getElementById("status").textContent = `Live · events checked ${ago(S.dataAsOf.signals)}`;
-  const typing = document.activeElement?.matches("input, textarea, select");
-  if (!typing && !document.getElementById("modal").classList.contains("show")) render();
+  document.getElementById("status").textContent = `Live · checked ${ago(S.dataAsOf.signals)}`;
+  const busy = document.activeElement?.matches("input:not([type=checkbox]), textarea, select") || document.getElementById("modal").classList.contains("show");
+  if (!busy) render();
 }
-function pick(id) { current = id; render(); window.scrollTo(0, 0); }
 async function tick() { try { await fetch("/api/refresh"); } catch {} await load(); }
 load().then(tick); setInterval(tick, 20000);
 </script>
