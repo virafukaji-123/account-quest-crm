@@ -6,6 +6,16 @@ const answers = require("../lib/answers.json");
 const history = require("../lib/history.json");
 const { redact } = require("../lib/game");
 
+// Fallback for a surprise account that has no written brief yet, so the page never breaks.
+const autoBrief = (a) => ({ tabline: a.story || "New account", headline: a.story || "New account: write-up in progress.", numbers: [], vs: [], risks: a.health.reasons.map((r) => r.text), actions: [], people: (a.contacts.stakeholders || []).map((p) => [p.name + " – " + p.role, p.relationship || ""]) });
+const autoAnswers = (a) => ({
+  worth: { backed: a.renewal ? [{ deal: "Current contract", id: "renewal", value: a.renewal.label, basis: a.renewal.evidence, ids: ["contract.txt", "profile.json"] }] : [], unbacked: [] },
+  power: [{ deal: "Renewal", decides: "Not yet known (new account)", pays: "See invoices.json", uses: "See stakeholders", blocks: "Not yet known", stance: (a.contacts.stakeholders || []).map((p) => [p.name, (p.relationship || "unknown") + ". " + p.role]), ids: ["get_new_account → stakeholders"] }],
+  first: [{ rank: 1, move: "New account: read the paperwork, meet the main contact and agree the first move.", owner: "Viraf", by: "within 2 days", deal: "", ids: [] }],
+  wrong: a.health.reasons.map((r) => ({ type: "Deal turning bad", what: r.text, turnsBad: "See evidence", ids: [r.evidence] })),
+  unknown: (a.contacts.notOnFile || []).map((g) => ({ gap: g, why: "Not on file yet", who: "Main contact", ids: ["profile.json → not_on_file"] })),
+});
+
 module.exports = async (req, res) => {
   const s = await load();
   // Events the game returned earlier are kept as history (lib/history.json), marked as recorded.
@@ -19,7 +29,7 @@ module.exports = async (req, res) => {
     accounts: accountIds(s).filter((id) => s.paperwork?.[id]).map((id) => {
       const a = analyse(s, id, today);
       a.events = a.events.map((e) => ({ ...e, recorded: recorded.find((r) => r.id === e.id)?.recorded || null }));
-      return { ...a, brief: briefs[id] || null, answers: answers[id] || null, drafts: drafts[id] || [] };
+      return { ...a, brief: briefs[id] || autoBrief(a), answers: answers[id] || autoAnswers(a), drafts: drafts[id] || [] };
     }),
     newEvents: s.newEvents || [],
     log: s.log.slice(0, 15).map((l) => (l.error ? { ...l, error: redact(l.error) } : l)),
