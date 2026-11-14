@@ -33,7 +33,7 @@
    "A document request from one of the forces (FB-10412) has been sitting with no owner since June."
   ],
   "actions": [
-   "Today: take ownership of ticket FB-11206 and reply to Karen in writing \u2013 training dates and a named contact for the 5 Dec event.",
+   "Today: take ownership of ticket FB-11206 and reply to Karen in writing – training dates and a named contact for the 5 Dec event.",
    "This week: fix or answer Karen's battery problem on the two busy docks.",
    "Before Rhys leaves: get a named contact at each of the 4 forces and at procurement.",
    "Find out what FB-10412 is, and ask our Accounts team which force pays which part of the invoice.",
@@ -41,11 +41,11 @@
   ],
   "people": [
    [
-    "Rhys Calder \u2013 alliance drone programme lead",
+    "Rhys Calder – alliance drone programme lead",
     "Our only contact so far. Positive but vague. Leaving in January, no successor named."
    ],
    [
-    "Insp. Karen Mbeki \u2013 Westmere drone unit",
+    "Insp. Karen Mbeki – Westmere drone unit",
     "The real power user (62 logins in 90 days). A bit guarded because we have not answered her. Our best possible champion."
    ],
    [
@@ -73,8 +73,8 @@
     "Only 4 docks ever flew most nights. 9 fly about once a fortnight. One dock has never flown."
    ],
    [
-    "ROI is proven: about \u20ac1.2 million a year saved.",
-    "No breakdown has ever been shared. The only hard number is the insurer's 6% discount, about \u20ac180,000 a year."
+    "ROI is proven: about €1.2 million a year saved.",
+    "No breakdown has ever been shared. The only hard number is the insurer's 6% discount, about €180,000 a year."
    ],
    [
     "The renewal is a formality.",
@@ -94,13 +94,13 @@
   "actions": [
    "Find out why the 3 busy docks stopped (AD-02, AD-05, AD-10). Check whether it is linked to the deputy leaving.",
    "Write down the install list and patrol set-up with the deputy before he goes.",
-   "Meet Julian Tate (insurance) to protect the ~\u20ac180k discount, and build the renewal case on it.",
+   "Meet Julian Tate (insurance) to protect the ~€180k discount, and build the renewal case on it.",
    "Reply to Group Finance with the cost and value for each plant.",
    "Ask Owen Fitch (IT) to fix the network at Plant 11 (ticket FB-10903)."
   ],
   "people": [
    [
-    "Stefan Roy \u2013 group head of security",
+    "Stefan Roy – group head of security",
     "Signs the contract. Talks big numbers but shares no detail. Not logged in since May."
    ],
    [
@@ -108,20 +108,79 @@
     "Did the whole rollout and still runs the system. Leaving soon. Nothing written down."
    ],
    [
-    "Beatriz Alonso \u2013 plant manager, Plant 7",
+    "Beatriz Alonso – plant manager, Plant 7",
     "Finds it useful at night and would keep it. Her plant pays a cost it did not choose."
    ],
    [
-    "Julian Tate \u2013 insurance and risk manager",
+    "Julian Tate – insurance and risk manager",
     "Got the 6% premium cut because of the patrols. Nobody in security has talked to him."
    ],
    [
-    "Owen Fitch \u2013 group IT lead",
+    "Owen Fitch – group IT lead",
     "Can fix the poor network at Plant 11. Not yet involved."
    ],
    [
     "Group Finance (shared mailbox)",
     "Wants the renewal quote split by plant. Unanswered since 8 October."
+   ]
+  ]
+ },
+ "K": {
+  "tabline": "Paid for, never flown, and the residents vote on the budget this week",
+  "headline": "Kestrel Estates paid £14,000 for one dock in September. It has never flown, nobody there can fly it, and the residents' board votes on the security budget on 17 Nov.",
+  "numbers": [
+   [
+    "Docks",
+    "1 (north gate, gatehouse roof)"
+   ]
+  ],
+  "vs": [
+   [
+    "Everyone here is excited. We are just waiting to go live.",
+    "The dock has flown zero times in 7 weeks online. It was never commissioned, and Dana's one email got only an automatic reply."
+   ],
+   [
+    "The system will fly itself once switched on.",
+    "Nobody at the estate holds a drone pilot certificate, and training was left to the installer, who has stopped answering."
+   ],
+   [
+    "The dock is for mapping the whole estate.",
+    "What the estate really needs is night patrol of its two entrances."
+   ],
+   [
+    "Ready to use.",
+    "The insurer must be told about new aerial equipment before use. The dock has not been declared."
+   ]
+  ],
+  "risks": [
+   "The residents' board votes on the security budget on 17 Nov, and some residents already ask why they paid for a drone that never flew.",
+   "Nobody can fly the dock: no certified pilot, no commissioning flight, and the installer has gone.",
+   "Flying before the insurer is told could put the estate's property cover at risk.",
+   "Dana was promised a go-live plan by 16 Nov, and FlytBase has not replied to her email of 19 Oct."
+  ],
+  "actions": [
+   "Call Dana Whitfield now: apologise for the silence and agree a go-live plan by 16 Nov.",
+   "Offer the pilot certification course for two estate staff (£4,000), so the estate can fly the dock legally.",
+   "Ask Lucy Pratt (insurance broker) to declare the dock to the insurer before any flight.",
+   "Book a FlytBase commissioning flight and set up night patrols for the north gate.",
+   "Give Graham Okafor a one-page update for the 17 Nov board vote."
+  ],
+  "people": [
+   [
+    "Dana Whitfield – estate manager",
+    "Our only contact. Warm, but waiting since 19 Oct with no reply from a person."
+   ],
+   [
+    "Graham Okafor – chair, residents' board",
+    "Any spend beyond the original purchase needs the board's vote. Residents are already asking questions."
+   ],
+   [
+    "Lucy Pratt – insurance broker",
+    "Confirms the dock must be declared to the insurer before use. It has not been."
+   ],
+   [
+    "The installer (reseller)",
+    "Ordered and installed the dock, then stopped answering calls and email."
    ]
   ]
  }
