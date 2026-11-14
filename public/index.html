@@ -92,12 +92,14 @@
   nav.views { display:flex; gap:6px; flex-wrap:wrap; margin:18px 0 6px; }
   nav.views button { border-radius:20px; padding:7px 16px; font-weight:600; }
   nav.views button.on { background:var(--ink); color:#fff; border-color:var(--ink); }
-  .grid2 { display:grid; grid-template-columns:1fr 1fr; gap:14px; } @media (max-width:800px){ .grid2 { grid-template-columns:1fr; } }
+  .grid2 { display:grid; grid-template-columns:repeat(auto-fit,minmax(340px,1fr)); gap:14px; } @media (max-width:800px){ .grid2 { grid-template-columns:1fr; } }
   .kpi { display:grid; grid-template-columns:repeat(2,1fr); gap:8px; margin:10px 0; }
   .kpi div { background:#faf9f6; border:1px solid var(--line); border-radius:10px; padding:8px 10px; } .kpi small { display:block; color:var(--muted); font-size:12px; } .kpi b { font-size:17px; }
   .bottom { background:#f0fdfa; border-left:4px solid var(--accent); padding:10px 14px; border-radius:8px; margin:6px 0 2px; }
   .acct { font-size:12px; font-weight:700; color:#fff; background:var(--accent); border-radius:6px; padding:1px 7px; white-space:nowrap; }
   .acct.B { background:#7c3aed; }
+  .acct.K { background:#c2410c; }
+  .acct.new::after { content:" NEW"; font-size:10px; }
   .chart { width:100%; height:auto; } .chart text { font:11px Segoe UI,system-ui,sans-serif; fill:#6b7280; }
   .legend span { display:inline-block; margin-right:14px; font-size:12px; color:var(--muted); } .legend i { display:inline-block; width:10px; height:10px; border-radius:2px; margin-right:5px; vertical-align:middle; }
   .ids { display:none; } body.src .ids { display:block; }
@@ -126,14 +128,15 @@ const ago = (iso) => { if (!iso) return "never"; const m = Math.round((Date.now(
 const fmtDate = (d) => d ? new Date(d).toLocaleDateString("en-GB", { day:"numeric", month:"short", year:"numeric" }) : "";
 const money = (v, cur) => (cur === "GBP" ? "£" : "€") + Math.round(v).toLocaleString("en-GB");
 const chips = (ids) => (ids && ids.length ? `<div class="ids">${ids.map((i) => `<code>${esc(i)}</code>`).join(" ")}</div>` : "");
-const tag = (a) => `<span class="acct ${a.id}">${a.id === "A" ? "Police" : "Industrial"}</span>`;
+const LABELS = { A: "Police", B: "Industrial", K: "Estate" };
+const tag = (a) => `<span class="acct ${a.id}${a.id === "K" ? " new" : ""}">${LABELS[a.id] || esc(a.name.split(" ")[0])}</span>`;
 const kindLabel = { risk:"Risk", task:"Task", next_step:"Next step", note:"Note" };
 const statusLabel = { claim:"Claim – not checked", told:"Told to us", verified:"Checked ✓" };
 const A = () => S.accounts.find((a) => a.id === current);
 const atRisk = (a) => { const f = a.fleet, r = a.renewal; const per = r.value / f.total, idle = f.total - f.flyingNow; return { per, idle, value: per * idle }; };
 function sec(key, title, count, inner, open) { const o = openState[key] ?? open;
   return `<details class="sec" data-key="${key}" ${o ? "open" : ""}><summary>${title}<span class="count">${count ?? ""}</span></summary><div class="body">${inner}</div></details>`; }
-const filterBar = () => `<div class="filter">${[["all","Both clients"], ...S.accounts.map((a) => [a.id, a.name])].map(([k, t]) => `<button class="${clientF === k ? "primary" : ""}" onclick="clientF='${k}';render()">${esc(t)}</button>`).join("")}</div>`;
+const filterBar = () => `<div class="filter">${[["all","All clients"], ...S.accounts.map((a) => [a.id, a.name])].map(([k, t]) => `<button class="${clientF === k ? "primary" : ""}" onclick="clientF='${k}';render()">${esc(t)}</button>`).join("")}</div>`;
 const pickAcc = () => S.accounts.filter((a) => clientF === "all" || a.id === clientF);
 const VIEWS = [["overview","Overview"],["risks","Risks"],["opps","Opportunities"],["usage","Drone usage"],["detail","Account detail"]];
 
@@ -154,7 +157,7 @@ function risks() {
   const rows = pickAcc().flatMap((a) => a.answers.wrong.map((w) => ({ a, ...w })));
   const order = ["Deadline at risk","Deal turning bad","Person leaving","Going cold","Stuck"];
   rows.sort((x, y) => order.indexOf(x.type) - order.indexOf(y.type));
-  return filterBar() + `<div class="card"><h2>${clientF === "all" ? "Risks across both clients" : "Risks – " + esc(pickAcc()[0].name)} <span class="meta">(${rows.length})</span></h2><table class="t ans"><tr><th>Account</th><th>Risk</th><th>When it turns bad</th></tr>
+  return filterBar() + `<div class="card"><h2>${clientF === "all" ? "Risks across all clients" : "Risks – " + esc(pickAcc()[0].name)} <span class="meta">(${rows.length})</span></h2><table class="t ans"><tr><th>Account</th><th>Risk</th><th>When it turns bad</th></tr>
     ${rows.map((x) => `<tr><td>${tag(x.a)}</td><td><span class="tag risk">${esc(x.type)}</span> ${esc(x.what)}${chips(x.ids)}</td><td>${esc(x.turnsBad)}</td></tr>`).join("")}</table></div>
     <div class="${clientF === "all" ? "grid2" : ""}">${pickAcc().map((a) => `<div class="card"><h2>${tag(a)} What we do first</h2><table class="t ans"><tr><th>#</th><th>Move</th><th>Owner · by</th></tr>
       ${a.answers.first.map((m) => `<tr><td><b>${m.rank}</b></td><td>${esc(m.move)}${chips(m.ids)}</td><td>${esc(m.owner)}<br><b>${esc(m.by)}</b></td></tr>`).join("")}</table></div>`).join("")}</div>`;
@@ -181,7 +184,7 @@ function chart(weeks) {
 }
 function usage() {
   if (!U) return `<div class="card">Loading usage…</div>`;
-  return S.accounts.map((a) => { const wk = U[a.id].weeks.slice(-16), l4 = wk.slice(-4), p4 = wk.slice(-8, -4);
+  return S.accounts.map((a) => { const wk = (U[a.id]?.weeks || []).slice(-16), l4 = wk.slice(-4), p4 = wk.slice(-8, -4);
     const sum = (x) => x.reduce((t, w) => t + w.flights, 0), now = sum(l4), before = sum(p4), ch = before ? Math.round((now - before) / before * 100) : 0;
     return `<div class="card"><h2>${tag(a)} ${esc(a.name)} – drone usage</h2>
       <div class="kpi" style="grid-template-columns:repeat(4,1fr)"><div><small>Flights, last 4 weeks</small><b>${now}</b></div><div><small>vs previous 4 weeks</small><b style="color:${ch < 0 ? "var(--red)" : "var(--green)"}">${ch > 0 ? "+" : ""}${ch}%</b></div>
