@@ -1,6 +1,6 @@
 // Weekly drone usage per account, for the leadership view. Reads saved data only (no game call).
 const { load } = require("../lib/store");
-const { parseCSV } = require("../lib/engine");
+const { parseCSV, accountIds } = require("../lib/engine");
 const history = require("../lib/history.json");
 
 module.exports = async (req, res) => {
@@ -8,7 +8,7 @@ module.exports = async (req, res) => {
   const live = s.signals?.data?.signals || [];
   const sigs = [...history.signals.filter((h) => !live.some((l) => l.id === h.id)), ...live];
   const out = {};
-  for (const id of ["A", "B"]) {
+  for (const id of accountIds(s)) {
     const base = (s.paperwork?.[id]?.records || []).find((r) => r.path === "usage_weekly.csv")?.text || "";
     const extra = sigs.filter((x) => x.account === id).flatMap((x) => (x.records || []).filter((r) => r.path.endsWith("usage_weekly.csv")).map((r) => r.text));
     const rows = new Map();
