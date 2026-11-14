@@ -101,6 +101,10 @@
   .acct.K { background:#c2410c; }
   .acct.H { background:#0369a1; }
   .acct.custom { background:#475569; }
+  .stat { font-size:12px; font-weight:600; border-radius:999px; padding:2px 9px; border:1px solid; white-space:nowrap; cursor:pointer; background:#fff; }
+  .stat.sug { border-style:dashed; }
+  .stat.s-green { color:#15803d; border-color:#86efac; background:#f0fdf4; } .stat.s-amber { color:#b45309; border-color:#fcd34d; background:#fffbeb; } .stat.s-red { color:#b91c1c; border-color:#fca5a5; background:#fef2f2; } .stat.s-blue { color:#1d4ed8; border-color:#93c5fd; background:#eff6ff; } .stat.s-grey { color:#475569; border-color:#cbd5e1; background:#f8fafc; }
+  .statlist { display:grid; grid-template-columns:repeat(auto-fit,minmax(210px,1fr)); gap:8px; margin:10px 0; } .statlist label { display:flex; gap:8px; align-items:flex-start; border:1px solid #e5e7eb; border-radius:10px; padding:8px 10px; cursor:pointer; font-size:13px; } .statlist small { display:block; color:#6b7280; font-weight:400; } .statlist input { width:auto; flex:none; margin:3px 0 0; } .statlist label > span { flex:1; text-align:left; }
   .form { display:grid; grid-template-columns:1fr 1fr; gap:10px 14px; } .form label { display:flex; flex-direction:column; font-size:13px; font-weight:600; gap:4px; } .form .full { grid-column:1/-1; } .form h3 { grid-column:1/-1; margin:8px 0 0; font-size:14px; color:var(--muted,#666); } .form input, .form select, .form textarea { font:inherit; font-weight:400; padding:7px 9px; border:1px solid #ccc; border-radius:8px; } @media (max-width:640px){ .form { grid-template-columns:1fr; } }
   .acct.new::after { content:" NEW"; font-size:10px; }
   .chart { width:100%; height:auto; } .chart text { font:11px Segoe UI,system-ui,sans-serif; fill:#6b7280; }
@@ -146,8 +150,9 @@ const VIEWS = [["overview","Overview"],["risks","Risks"],["opps","Opportunities"
 
 // ---------- Overview ----------
 function overview() {
-  return `<div class="grid2">${S.accounts.map((a) => { const r = atRisk(a), q = a.answers;
-    return `<div class="card"><h2>${tag(a)} ${esc(a.name)} <span class="badge ${a.health.rating}">${a.health.rating}</span></h2>
+  const counts = {}; S.accounts.forEach((a) => (counts[a.status.status] = (counts[a.status.status] || 0) + 1));
+  return `<div class="filter">${Object.entries(counts).map(([k, n]) => `<span class="stat ${STATUS[k][0]}" style="cursor:default">${esc(k)}: ${n}</span>`).join("")}</div><div class="grid2">${S.accounts.map((a) => { const r = atRisk(a), q = a.answers;
+    return `<div class="card"><h2>${tag(a)} ${esc(a.name)} <span class="badge ${a.health.rating}">${a.health.rating}</span> ${statChip(a)}</h2>
       <div class="bottom">${esc(a.brief?.headline || "")}</div>
       <div class="kpi"><div><small>Contract</small><b>${esc(a.renewal.label)}</b></div><div><small>Renewal</small><b>${fmtDate(a.renewal.date)}</b><br><span class="meta">${a.renewal.daysLeft} days · ${a.renewal.auto ? "renews automatically" : "not automatic"}</span></div>
       <div><small>Docks flying regularly now</small><b>${a.fleet.flyingNow} of ${a.fleet.total}</b> <button class="linkbtn" onclick="current='${a.id}';trace('fleet')">trace</button></div><div><small>Renewal value at risk</small><b>${money(r.value, a.renewal.currency)}</b><br><span class="meta">${r.idle} idle docks × ${money(r.per, a.renewal.currency)}</span></div></div>
@@ -230,7 +235,7 @@ function fiveAnswers(a) {
 function detail() {
   const a = A(), f = a.fleet, h = a.health;
   let html = `<div style="display:flex;gap:8px;margin:6px 0 12px">${S.accounts.map((x) => `<button class="${x.id === current ? "primary" : ""}" onclick="current='${x.id}';render()">${esc(x.name)}</button>`).join("")}</div>`;
-  html += `<div class="card"><h2>${tag(a)} ${esc(a.name)} <span class="badge ${h.rating}">${h.rating}${a.custom ? " · set by owner" : " · " + h.score + " risk points"}</span>${a.custom ? ` <button class="small" onclick="clientForm('${a.id}')">Edit</button> <button class="small" onclick="deleteClient('${a.id}')">Delete</button>` : ""}</h2><div class="headline">${esc(a.brief?.headline || "")}</div>
+  html += `<div class="card"><h2>${tag(a)} ${esc(a.name)} <span class="badge ${h.rating}">${h.rating}${a.custom ? " · set by owner" : " · " + h.score + " risk points"}</span> ${statChip(a)}${a.custom ? ` <button class="small" onclick="clientForm('${a.id}')">Edit</button> <button class="small" onclick="deleteClient('${a.id}')">Delete</button>` : ""}</h2><div class="headline">${esc(a.brief?.headline || "")}</div>
     <div class="nums"><div class="num"><small>Contract</small><b>${esc(a.renewal.label)}</b><br><button class="linkbtn" onclick="trace('renewal')">where from?</button></div>
     <div class="num"><small>Renewal</small><b>${fmtDate(a.renewal.date)}</b><br><span class="meta">${a.renewal.daysLeft} days · ${a.renewal.auto ? "renews automatically" : "not automatic"}</span></div>
     <div class="num"><small>Docks flying regularly now</small><b>${f.flyingNow} of ${f.total}</b><br><button class="linkbtn" onclick="trace('fleet')">trace this number</button></div>
@@ -277,6 +282,37 @@ function trace(what) {
   document.getElementById("modal").classList.add("show");
 }
 function closeModal() { document.getElementById("modal").classList.remove("show"); }
+
+// ---------- account status (owner sets it; until then a suggestion is shown) ----------
+const STATUS = {
+  "Onboarding": ["s-blue", "Bought, not yet live or still being set up."],
+  "Active": ["s-green", "Live and in use, nothing urgent."],
+  "Expansion in progress": ["s-green", "Talking about more docks or sites."],
+  "Due for renewal": ["s-amber", "Renewal within about 4 months, not yet agreed."],
+  "Renewal in negotiation": ["s-amber", "Renewal quote or terms being discussed."],
+  "Renewed": ["s-green", "New term signed."],
+  "At risk": ["s-red", "Renewal or usage in danger; needs action now."],
+  "On hold": ["s-grey", "Paused by the customer or by us."],
+  "Churned": ["s-grey", "Customer has left."],
+};
+const statChip = (a) => `<button class="stat ${STATUS[a.status.status]?.[0] || "s-grey"} ${a.status.suggested ? "sug" : ""}" title="${a.status.suggested ? "Suggested from the data – click to set" : "Set " + fmtDate(a.status.at) + (a.status.note ? ": " + esc(a.status.note) : "")}" onclick="statusForm('${a.id}')">Status: ${esc(a.status.status)}${a.status.suggested ? " (suggested)" : ""}</button>`;
+function statusForm(id) {
+  const a = S.accounts.find((x) => x.id === id), cur = a.status.status;
+  document.getElementById("modalBox").innerHTML = `<h2>Status – ${esc(a.name)}</h2>`
+    + (a.status.suggested ? `<p class="meta">Not set yet. Suggested from the data: <b>${esc(cur)}</b>.</p>` : `<p class="meta">Current: <b>${esc(cur)}</b>, set ${fmtDate(a.status.at)}.</p>`)
+    + (ADMIN ? "" : `<p class="meta">Read-only view: changing status needs the owner's key (open the CRM with ?key=…).</p>`)
+    + `<div class="statlist">${Object.entries(STATUS).map(([k, [c, d]]) => `<label><input type="radio" name="st" value="${k}" ${k === cur ? "checked" : ""}><span><span class="stat ${c}" style="cursor:inherit">${k}</span><small>${d}</small></span></label>`).join("")}</div>`
+    + `<textarea id="stNote" placeholder="Note (optional): why, who, next date">${a.status.suggested ? "" : esc(a.status.note || "")}</textarea><p class="meta" id="stMsg"></p>`
+    + (a.status.history?.length ? `<b>History</b><ul class="clean">${a.status.history.map((h) => `<li>${fmtDate(h.at)} – ${esc(h.status)}${h.note ? ": " + esc(h.note) : ""}</li>`).join("")}</ul>` : "")
+    + `<div style="margin-top:12px;display:flex;gap:8px;justify-content:flex-end"><button onclick="closeModal()">Cancel</button><button class="primary" onclick="saveStatus('${id}')">Save status</button></div>`;
+  document.getElementById("modal").classList.add("show");
+}
+async function saveStatus(id) {
+  const status = document.querySelector('input[name="st"]:checked')?.value;
+  const r = await fetch("/api/status", { method: "POST", headers: { "content-type": "application/json", "x-admin-key": ADMIN }, body: JSON.stringify({ account: id, status, note: document.getElementById("stNote").value }) });
+  const j = await r.json(); if (!r.ok) return (document.getElementById("stMsg").textContent = j.error);
+  closeModal(); await load(); render();
+}
 
 // ---------- add / edit a client (owner only) ----------
 const FIELDS = [
