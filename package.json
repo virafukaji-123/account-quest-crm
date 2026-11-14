@@ -6,4 +6,3 @@
   "scripts": { "dev": "node dev.js" },
   "engines": { "node": ">=18" }
 }
-{"name":"account-quest-crm","version":"2.0.0","private":true,"description":"A CRM for the Account Quest questathon: finds what is really going on in two FlytBase accounts and turns it into a renewal plan.","scripts":{"dev":"node dev.js"},"engines":{"node":">=18"}}
