@@ -82,6 +82,11 @@
   textarea { min-height:70px; }
   .muted { color:var(--muted); font-size:13px; } .empty { color:var(--muted); font-style:italic; }
   .log div { font-size:13px; padding:2px 0; } .ok{color:var(--green)} .err{color:var(--red)}
+  .ids { margin-top:4px; } .ids code, td code { font-size:11px; background:#eef2f7; color:#334155; padding:1px 6px; border-radius:6px; margin-right:3px; display:inline-block; }
+  table.ans td { vertical-align:top; } tr.calc td { background:#fff7d6; }
+  .apart { margin-top:10px; background:#f8f6f1; border:1px dashed var(--line); border-radius:10px; padding:8px 12px; }
+  .powercard { border:1px solid var(--line); border-radius:10px; padding:8px 12px; margin-bottom:8px; } .powercard h4 { margin:2px 0 6px; font-size:14px; }
+  td.k { color:var(--muted); width:150px; white-space:nowrap; }
 </style>
 </head>
 <body>
@@ -113,24 +118,36 @@ function sec(key, title, count, inner, open) {
   return `<details class="sec" data-key="${key}" ${o ? "open" : ""}><summary>${title}<span class="count">${count ?? ""}</span></summary><div class="body">${inner}</div></details>`;
 }
 
-// ---------- the five answers ----------
+// ---------- the five answers (the game's own questions) ----------
+const chips = (ids) => (ids && ids.length ? `<div class="ids">${ids.map((i) => `<code>${esc(i)}</code>`).join(" ")}</div>` : "");
+const money = (v, cur) => (cur === "GBP" ? "£" : "€") + Math.round(v).toLocaleString("en-GB");
 function fiveAnswers(a) {
-  const f = a.fleet, b = a.brief || {}, h = a.health;
-  const people = a.contacts;
-  const top = [...h.reasons].sort((x, y) => y.points - x.points).slice(0, 3);
+  const q = a.answers; if (!q) return [];
+  const f = a.fleet, r = a.renewal;
+  const perDock = r && f.total ? r.value / f.total : 0, idle = f.total - f.flyingNow;
+  const atRisk = `<tr class="calc"><td><b>Renewal value at risk now</b><br><span class="meta">calculated live</span></td><td><b>${money(perDock * idle, r?.currency)}</b></td>
+    <td>${idle} of ${f.total} docks are not flying regularly right now × ${money(perDock, r?.currency)} a dock (${money(r?.value || 0, r?.currency)} ÷ ${f.total} docks). <button class="linkbtn" onclick="trace('fleet')">trace</button>${chips([f.evidence.split(" + ")[0], "contract.txt"])}</td></tr>`;
+  const w = q.worth;
+  const tblWorth = `<table class="t ans"><tr><th>Deal</th><th>Value</th><th>Backed by</th></tr>
+    ${w.backed.map((d) => `<tr><td><b>${esc(d.deal)}</b></td><td><b>${esc(d.value)}</b></td><td>${esc(d.basis)}${chips(d.ids)}</td></tr>`).join("")}${atRisk}</table>
+    <div class="apart"><b>Shown apart – cannot be backed:</b>${w.unbacked.map((u) => `<div class="item"><b>${esc(u.item)}</b> – ${esc(u.why)}${chips(u.ids)}</div>`).join("")}</div>`;
+  const tblPower = q.power.map((p) => `<div class="powercard"><h4>${esc(p.deal)}</h4>
+    <table class="t"><tr><td class="k">Decides</td><td>${esc(p.decides)}</td></tr><tr><td class="k">Pays</td><td>${esc(p.pays)}</td></tr>
+    <tr><td class="k">Uses it</td><td>${esc(p.uses)}</td></tr><tr><td class="k">Could block it</td><td>${esc(p.blocks)}</td></tr>
+    <tr><td class="k">Where each stands</td><td>${p.stance.map(([n, t]) => `<b>${esc(n)}</b>: ${esc(t)}`).join("<br>")}</td></tr></table>${chips(p.ids)}</div>`).join("");
+  const tblFirst = `<table class="t ans"><tr><th>#</th><th>Move</th><th>Owner</th><th>By</th><th>Deal it moves</th></tr>
+    ${q.first.map((m) => `<tr><td><b>${m.rank}</b></td><td>${esc(m.move)}${chips(m.ids)}</td><td>${esc(m.owner)}</td><td><b>${esc(m.by)}</b></td><td><code>${esc(m.deal)}</code></td></tr>`).join("")}</table>`;
+  const tblWrong = `<table class="t ans"><tr><th>What</th><th>When it turns bad</th></tr>
+    ${q.wrong.map((x) => `<tr><td><span class="tag risk">${esc(x.type)}</span> ${esc(x.what)}${chips(x.ids)}</td><td>${esc(x.turnsBad)}</td></tr>`).join("")}</table>
+    <div class="meta" style="margin-top:6px">Health score: <span class="badge ${a.health.rating}">${a.health.rating} · ${a.health.score} risk points</span> – ${a.health.reasons.map((x) => `+${x.points} ${esc(x.text)}`).join("; ")}</div>`;
+  const tblUnknown = `<table class="t ans"><tr><th>What we do not know</th><th>Why it matters</th><th>Who could fill it</th></tr>
+    ${q.unknown.map((u) => `<tr><td><b>${esc(u.gap)}</b>${chips(u.ids)}</td><td>${esc(u.why)}</td><td>${esc(u.who)}</td></tr>`).join("")}</table>`;
   return [
-    { q: "1. How healthy is this account?", a: `<span class="badge ${h.rating}">${h.rating}</span> <b>${h.score} risk points.</b> ${esc(b.headline || "")}
-        <div style="margin-top:6px">${h.reasons.map((r) => `<div class="reason"><span class="pts">+${r.points}</span><span>${esc(r.text)} <span class="meta">· ${esc(r.evidence)}</span></span></div>`).join("")}</div>`,
-      src: h.rule },
-    { q: "2. What is really going on (vs. what we were told)?", a: (b.vs || []).map(([s, r]) => `<div class="vs"><div class="said"><small>They say</small>${esc(s)}</div><div class="real"><small>The evidence shows</small>${esc(r)}</div></div>`).join(""),
-      src: "Claims from get_my_accounts (facts marked claim / told / checked), compared with usage, calls and events." },
-    { q: "3. Who matters, and who are we missing?", a: `<ul class="clean">${(b.people || []).map(([n, t]) => `<li><b>${esc(n)}</b> – ${esc(t)}</li>`).join("")}</ul>
-        <div class="meta" style="margin-top:6px">Calls since handover: ${people.callsSinceHandover}, all with: ${esc(people.peopleOnThoseCalls.join(", ") || "nobody")}.</div>`,
-      src: people.evidence },
-    { q: "4. What could stop the renewal?", a: `<ul class="clean">${top.map((r) => `<li>${esc(r.text)}</li>`).join("")}${(b.risks || []).slice(0, 2).map((r) => `<li>${esc(r)}</li>`).join("")}</ul>`,
-      src: "Biggest risk points from the health score, plus analyst notes." },
-    { q: "5. What do we do next?", a: `<ul class="clean">${(b.actions || []).map((r) => `<li>${esc(r)}</li>`).join("")}</ul>`,
-      src: "Ordered by urgency: events with a date first, then renewal deadline." },
+    { q: "1. What is the book worth?", a: tblWorth, src: "Values come from the contract and the game's offers. Anything resting on one person's word is listed apart, not added in." },
+    { q: "2. Who holds the power?", a: tblPower, src: "Stakeholders and their stance from get_my_accounts, plus calls, contract and logins." },
+    { q: "3. What do you do first?", a: tblFirst, src: "Ranked by the nearest deadline it protects." },
+    { q: "4. What is about to go wrong?", a: tblWrong, src: "Deadlines, people going cold and stuck items, from events, tickets, emails and usage. The health score adds the warning signs up." },
+    { q: "5. What do you still not know?", a: tblUnknown, src: "Gaps the plan rests on, from profile.json (not on file) and unchecked claims." },
   ];
 }
 
@@ -149,11 +166,11 @@ function render() {
       <div class="num"><small>Open requests nobody owns</small><b>${a.openRequests.length}</b><br><button class="linkbtn" onclick="trace('requests')">see them</button></div>
     </div></div>`;
 
-  html += `<div class="card"><h2>The five answers</h2>${fiveAnswers(a).map((x) => `<div class="answer"><h3>${x.q}</h3>${x.a}<div class="src">How it decides: ${esc(x.src)}</div></div>`).join("")}</div>`;
+  html += `<div class="card"><h2>The five answers</h2><div class="meta" style="margin:-4px 0 6px">Grey codes are the ids each line rests on: game facts, deals, events, tickets and files.</div>${fiveAnswers(a).map((x) => `<div class="answer"><h3>${x.q}</h3>${x.a}<div class="src">How it decides: ${esc(x.src)}</div></div>`).join("")}</div>`;
 
   // events
   const newIds = new Set((S.newEvents || []).map((e) => e.id));
-  html += sec("events", "🔔 Events since you took over", a.events.length, a.events.length ? a.events.map((e) => `<div class="item"><b>${esc(e.title)}</b>${newIds.has(e.id) ? '<span class="tag new">NEW</span>' : ""} <span class="meta">· ${fmtDate(e.dated)}</span><br>${esc(e.summary)}
+  html += sec("events", "🔔 Events since you took over", a.events.length, a.events.length ? a.events.map((e) => `<div class="item"><b>${esc(e.title)}</b>${newIds.has(e.id) ? '<span class="tag new">NEW</span>' : ""}${e.recorded ? `<span class="tag">recorded from the game ${new Date(e.recorded).toLocaleString("en-GB",{day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"})}</span>` : ""} <span class="meta">· ${fmtDate(e.dated)}</span><br>${esc(e.summary)}
     ${e.records?.length ? `<details><summary class="meta" style="cursor:pointer">Original email / data</summary>${e.records.map((r) => `<pre>${esc(r.text)}</pre>`).join("")}</details>` : ""}</div>`).join("") : '<div class="empty">Nothing yet.</div>', true);
 
   // notes
