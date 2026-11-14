@@ -64,5 +64,27 @@
    "title": "Pilot certification for two estate staff (£4,000)",
    "text": "Offer the pilot certification course to Dana for two staff. Without it nobody at the estate can fly the dock. Needs a board vote (Graham Okafor). Evidence: k_training_14b, k_no_pilot_14b, k_board_pays_14b."
   }
+ ],
+ "H": [
+  {
+   "kind": "risk",
+   "title": "Finance won't renew on an unseen saving",
+   "text": "Priya Nair (finance director) signs the £96,000 renewal (ends 12 Apr 2027) and will not renew on a saving she cannot see. The £400,000 is Marcus Hale's own estimate; no patrol contract changed. Only 2 of 6 docks fly nightly. Evidence: h_finance_renewal_14b, h_saving_basis_14b, usage_weekly.csv."
+  },
+  {
+   "kind": "task",
+   "title": "Answer Elena's privacy request (FB-10231)",
+   "text": "Send Elena Varga the data retention and storage details she asked for on 14 Apr 2026. Unanswered for 7 months; it blocks the container yard dock (up to £30,000). Evidence: FB-10231, h_vendor_silent_14b, h_yard_blocked_14b."
+  },
+  {
+   "kind": "next_step",
+   "title": "Write down Tom's know-how before he leaves",
+   "text": "Before Tom Reyes's contract ends (~14 Dec), capture launch steps, patrol routes, the alert rota and which dock sits where. Offer Marcus the £12,000 playbook. Evidence: h_contractor_leaving_14b, h_rollout_pack_14b."
+  },
+  {
+   "kind": "next_step",
+   "title": "Brief IT before the yard network change",
+   "text": "Give Sam Okoye the docks' network needs before yard devices move to the segmented network (~Feb 2027). IT was never involved in the installs. Evidence: h_segmentation_14b, h_it_not_involved_14b."
+  }
  ]
 }
