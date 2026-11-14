@@ -99,6 +99,7 @@
   .acct { font-size:12px; font-weight:700; color:#fff; background:var(--accent); border-radius:6px; padding:1px 7px; white-space:nowrap; }
   .acct.B { background:#7c3aed; }
   .acct.K { background:#c2410c; }
+  .acct.H { background:#0369a1; }
   .acct.new::after { content:" NEW"; font-size:10px; }
   .chart { width:100%; height:auto; } .chart text { font:11px Segoe UI,system-ui,sans-serif; fill:#6b7280; }
   .legend span { display:inline-block; margin-right:14px; font-size:12px; color:var(--muted); } .legend i { display:inline-block; width:10px; height:10px; border-radius:2px; margin-right:5px; vertical-align:middle; }
@@ -128,8 +129,8 @@ const ago = (iso) => { if (!iso) return "never"; const m = Math.round((Date.now(
 const fmtDate = (d) => d ? new Date(d).toLocaleDateString("en-GB", { day:"numeric", month:"short", year:"numeric" }) : "";
 const money = (v, cur) => (cur === "GBP" ? "£" : "€") + Math.round(v).toLocaleString("en-GB");
 const chips = (ids) => (ids && ids.length ? `<div class="ids">${ids.map((i) => `<code>${esc(i)}</code>`).join(" ")}</div>` : "");
-const LABELS = { A: "Police", B: "Industrial", K: "Estate" };
-const tag = (a) => `<span class="acct ${a.id}${a.id === "K" ? " new" : ""}">${LABELS[a.id] || esc(a.name.split(" ")[0])}</span>`;
+const LABELS = { A: "Police", B: "Industrial", K: "Estate", H: "Port" };
+const tag = (a) => `<span class="acct ${a.id}${["K", "H"].includes(a.id) ? " new" : ""}">${LABELS[a.id] || esc(a.name.split(" ")[0])}</span>`;
 const kindLabel = { risk:"Risk", task:"Task", next_step:"Next step", note:"Note" };
 const statusLabel = { claim:"Claim – not checked", told:"Told to us", verified:"Checked ✓" };
 const A = () => S.accounts.find((a) => a.id === current);
