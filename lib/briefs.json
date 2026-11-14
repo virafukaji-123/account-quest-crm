@@ -1,0 +1,128 @@
+{
+ "A": {
+  "tabline": "Half the docks are idle and the main contact is leaving",
+  "headline": "It looks fine on paper, but only about half the docks are really used, and the only person we talk to is leaving in January.",
+  "numbers": [
+   [
+    "Docks",
+    "35 across 4 police forces"
+   ]
+  ],
+  "vs": [
+   [
+    "All four forces are keen.",
+    "Only Westmere and Metro Central fly real missions. Tarn Valley has never flown one. Norwold only does training."
+   ],
+   [
+    "We're flying all the time.",
+    "True for Westmere (14 of 18 docks). Metro Central fell from 8 docks flying to 3 in October."
+   ],
+   [
+    "The alliance has the budget. Renewal will go through.",
+    "Nothing in writing. The person who says this, Rhys, leaves in January. Renewal needs a brand-new order by 28 Feb."
+   ],
+   [
+    "A 300-dock tender and a 30-dock stadium deal are coming.",
+    "Only Rhys has said so. No document, no date, no other name. Procurement said anything bigger must go through a formal process."
+   ]
+  ],
+  "risks": [
+   "Rhys Calder is our only contact and he leaves in January. Nobody else at the alliance knows us.",
+   "Around half the docks are not used. At renewal, someone will ask why they are paying for them.",
+   "Karen, our most active user, has been ignored: her battery email from August got no reply, and her urgent request for 5 Dec has no owner.",
+   "A document request from one of the forces (FB-10412) has been sitting with no owner since June."
+  ],
+  "actions": [
+   "Today: take ownership of ticket FB-11206 and reply to Karen in writing \u2013 training dates and a named contact for the 5 Dec event.",
+   "This week: fix or answer Karen's battery problem on the two busy docks.",
+   "Before Rhys leaves: get a named contact at each of the 4 forces and at procurement.",
+   "Find out what FB-10412 is, and ask our Accounts team which force pays which part of the invoice.",
+   "Plan the renewal around what really works (Westmere, Metro Central), with a clear plan for the other two forces."
+  ],
+  "people": [
+   [
+    "Rhys Calder \u2013 alliance drone programme lead",
+    "Our only contact so far. Positive but vague. Leaving in January, no successor named."
+   ],
+   [
+    "Insp. Karen Mbeki \u2013 Westmere drone unit",
+    "The real power user (62 logins in 90 days). A bit guarded because we have not answered her. Our best possible champion."
+   ],
+   [
+    "Procurement lead (name not recorded)",
+    "Said anything bigger must go through a formal process. Needs to be found and kept informed."
+   ],
+   [
+    "Metro Central, Tarn Valley, Norwold",
+    "No named contact at any of them."
+   ]
+  ]
+ },
+ "B": {
+  "tabline": "Night patrols are stopping and finance is looking at the cost",
+  "headline": "They say the docks pay for themselves, but only 4 of 14 docks ever patrolled every night, and now 3 of those 4 have stopped.",
+  "numbers": [
+   [
+    "Docks",
+    "14 across 15 plants"
+   ]
+  ],
+  "vs": [
+   [
+    "13 of 15 plants are flying.",
+    "Only 4 docks ever flew most nights. 9 fly about once a fortnight. One dock has never flown."
+   ],
+   [
+    "ROI is proven: about \u20ac1.2 million a year saved.",
+    "No breakdown has ever been shared. The only hard number is the insurer's 6% discount, about \u20ac180,000 a year."
+   ],
+   [
+    "The renewal is a formality.",
+    "Group Finance has asked for the cost per plant, and plants already dislike paying for a dock they did not choose."
+   ],
+   [
+    "Everything is going well.",
+    "In mid-November, 3 of the 4 busy docks stopped flying. The docks are online. Nobody told us and no ticket was raised."
+   ]
+  ],
+  "risks": [
+   "Night patrols are collapsing just when Finance is checking the cost of each plant.",
+   "The insurance discount (worth more than the whole contract) depends on the patrols that are stopping.",
+   "Stefan's deputy, who set up and runs everything, is leaving, and nothing is written down.",
+   "Stefan, who signs, has not logged in since May."
+  ],
+  "actions": [
+   "Find out why the 3 busy docks stopped (AD-02, AD-05, AD-10). Check whether it is linked to the deputy leaving.",
+   "Write down the install list and patrol set-up with the deputy before he goes.",
+   "Meet Julian Tate (insurance) to protect the ~\u20ac180k discount, and build the renewal case on it.",
+   "Reply to Group Finance with the cost and value for each plant.",
+   "Ask Owen Fitch (IT) to fix the network at Plant 11 (ticket FB-10903)."
+  ],
+  "people": [
+   [
+    "Stefan Roy \u2013 group head of security",
+    "Signs the contract. Talks big numbers but shares no detail. Not logged in since May."
+   ],
+   [
+    "Stefan's deputy (name not on file)",
+    "Did the whole rollout and still runs the system. Leaving soon. Nothing written down."
+   ],
+   [
+    "Beatriz Alonso \u2013 plant manager, Plant 7",
+    "Finds it useful at night and would keep it. Her plant pays a cost it did not choose."
+   ],
+   [
+    "Julian Tate \u2013 insurance and risk manager",
+    "Got the 6% premium cut because of the patrols. Nobody in security has talked to him."
+   ],
+   [
+    "Owen Fitch \u2013 group IT lead",
+    "Can fix the poor network at Plant 11. Not yet involved."
+   ],
+   [
+    "Group Finance (shared mailbox)",
+    "Wants the renewal quote split by plant. Unanswered since 8 October."
+   ]
+  ]
+ }
+}
