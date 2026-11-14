@@ -1,0 +1,591 @@
+{
+ "A": {
+  "worth": {
+   "backed": [
+    {
+     "deal": "Renew the alliance contract (35 docks)",
+     "id": "a_renewal",
+     "value": "£350,000 a year",
+     "basis": "Order form: £350,000 a year, term 1 Mar 2026 – 28 Feb 2027, no automatic renewal. All four first-year invoices paid.",
+     "ids": [
+      "a_renewal",
+      "contract.txt",
+      "deal_history.json",
+      "invoices.json"
+     ]
+    },
+    {
+     "deal": "Tarn Valley and Norwold go live",
+     "id": "a_tarn",
+     "value": "£80,000 of the renewal",
+     "basis": "8 of the 35 docks sit with these two forces and fly no live missions. £350,000 ÷ 35 docks = £10,000 a dock, × 8 docks.",
+     "ids": [
+      "a_tarn",
+      "flight_log_force_month",
+      "rc_appetite_2",
+      "contract.txt"
+     ]
+    },
+    {
+     "deal": "Operator training for new pilots",
+     "id": "a_training",
+     "value": "£45,000",
+     "basis": "Offer on file, declined earlier. Karen now asks in writing for more trained operators before 5 Dec.",
+     "ids": [
+      "a_training",
+      "urgent_request",
+      "FB-11206"
+     ]
+    },
+    {
+     "deal": "Priority support for the drone units",
+     "id": "a_priority_support",
+     "value": "£60,000",
+     "basis": "Offer on file, declined earlier. Karen now asks who answers, and how fast, if a dock fails on 5 Dec. The contract has no out-of-hours cover.",
+     "ids": [
+      "a_priority_support",
+      "urgent_request",
+      "contract.txt"
+     ]
+    }
+   ],
+   "unbacked": [
+    {
+     "item": "Framework tender, up to 300 docks",
+     "why": "Rhys's word only. No specification, timetable, author or document since July.",
+     "ids": [
+      "rc_tender_0",
+      "deal_history.json",
+      "emails/2026-07-09_rhys_tender.txt"
+     ]
+    },
+    {
+     "item": "Westmere stadium, 30 docks",
+     "why": "Rhys's word only, status claim. Karen has never been asked; no quote issued.",
+     "ids": [
+      "rc_stadium_0",
+      "calls/2026-10-06_check_in.txt"
+     ]
+    },
+    {
+     "item": "Scale Westmere's fleet",
+     "why": "Karen wants more docks (pilot review), but there is no size or value, and the value case is two anecdotes with no cost comparison.",
+     "ids": [
+      "a_westmere",
+      "km_value_2",
+      "calls/2025-12-16_pilot_review.txt"
+     ]
+    },
+    {
+     "item": "\"The alliance has the budget\"",
+     "why": "Rhys's claim. No finance contact on file; renewal needs a new order.",
+     "ids": [
+      "rc_funding_0",
+      "profile.json"
+     ]
+    }
+   ]
+  },
+  "power": [
+   {
+    "deal": "Renewal (a_renewal)",
+    "decides": "The alliance office signs one order for the four forces. Anything larger goes through a formal procurement process (procurement lead, name not recorded).",
+    "pays": "The four forces: the order is invoiced in four parts; the split is in Schedule 2, held by FlytBase Accounts.",
+    "uses": "Westmere (Karen's unit: 62 sign-ins in 90 days) and Metro Central. Tarn Valley and Norwold fly no live missions.",
+    "blocks": "Rhys's successor (not named); the procurement lead; any force paying for docks it does not fly.",
+    "stance": [
+     [
+      "Rhys Calder",
+      "Neutral. Gatekeeper: asked that everything go through him. Leaves in January."
+     ],
+     [
+      "Insp. Karen Mbeki",
+      "Guarded. Her 11 Aug email got no reply; she now logs tickets."
+     ],
+     [
+      "Procurement lead",
+      "Unknown. Asked to be kept informed in Dec 2025; nobody owned that."
+     ]
+    ],
+    "ids": [
+     "contract.txt",
+     "calls/2025-12-16_pilot_review.txt",
+     "users.json",
+     "champion_leaves",
+     "calls/2026-05-19_intro_call.txt",
+     "emails/2026-08-11_karen_batteries.txt"
+    ]
+   },
+   {
+    "deal": "Westmere: training, support, more docks (a_training, a_priority_support, a_westmere)",
+    "decides": "Karen asks; who approves the spend is not on file (the alliance office signed last time).",
+    "pays": "Not known: the per-force split is in Schedule 2.",
+    "uses": "Westmere drone unit.",
+    "blocks": "Rhys, if it does not go through the programme office.",
+    "stance": [
+     [
+      "Insp. Karen Mbeki",
+      "Guarded but our best champion: real user, wants more docks."
+     ]
+    ],
+    "ids": [
+     "urgent_request",
+     "calls/2025-12-16_pilot_review.txt",
+     "contract.txt"
+    ]
+   },
+   {
+    "deal": "Tarn Valley and Norwold go live (a_tarn)",
+    "decides": "Each force decides its own use (install close call).",
+    "pays": "Their share of the order (Schedule 2).",
+    "uses": "Nobody yet. Tarn Valley was 'awaiting sign-off' in May–June; Norwold trains only.",
+    "blocks": "Whoever holds Tarn Valley's sign-off (unknown); Rhys declined calls with the forces.",
+    "stance": [
+     [
+      "Tarn Valley, Norwold",
+      "No named contact at either force."
+     ]
+    ],
+    "ids": [
+     "calls/2026-04-28_install_close.txt",
+     "flight_log_force_month",
+     "emails/2026-09-03_usage_question.txt",
+     "profile.json"
+    ]
+   }
+  ],
+  "first": [
+   {
+    "rank": 1,
+    "move": "Take ownership of FB-11206 and answer Karen in writing: dates for training more operators before 5 Dec, and a named contact plus response time if a dock fails on the day. Answer her 11 Aug battery email too (D16 and D29 keep raising battery warnings).",
+    "owner": "Viraf (CSM), with Pranjal Suyal (Lead Solutions Engineer)",
+    "by": "20 Nov 2026",
+    "deal": "a_training, a_priority_support, a_westmere",
+    "ids": [
+     "urgent_request",
+     "FB-11206",
+     "emails/2026-08-11_karen_batteries.txt",
+     "device_events.csv"
+    ]
+   },
+   {
+    "rank": 2,
+    "move": "Before Rhys leaves: ask him in writing to name his successor, introduce the procurement lead and one contact at each force, and confirm who signs the renewal.",
+    "owner": "Viraf, with Neel Sharma (Lead CSM)",
+    "by": "4 Dec 2026",
+    "deal": "a_renewal",
+    "ids": [
+     "champion_leaves",
+     "profile.json",
+     "emails/2026-10-28_renewal.txt"
+    ]
+   },
+   {
+    "rank": 3,
+    "move": "Map docks to forces (install sheets from the field team, Schedule 2 from Accounts), then agree a go-live plan with Tarn Valley and Norwold, or right-size the renewal around them.",
+    "owner": "Viraf, with Achal Negi (Director of Business Development)",
+    "by": "18 Dec 2026",
+    "deal": "a_tarn, a_renewal",
+    "ids": [
+     "flight_log_force_month",
+     "rc_appetite_2",
+     "contract.txt",
+     "calls/2026-04-28_install_close.txt"
+    ]
+   }
+  ],
+  "wrong": [
+   {
+    "type": "Deadline at risk",
+    "what": "Westmere's public event on 5 Dec. Karen asked on 18 Nov for answers in writing 'this week'; ticket FB-11206 has no owner.",
+    "turnsBad": "After 20 Nov without a written reply; fails outright on 5 Dec.",
+    "ids": [
+     "urgent_request",
+     "FB-11206"
+    ]
+   },
+   {
+    "type": "Person leaving",
+    "what": "Rhys Calder leaves the programme in January, no successor named. Every call since May was with him alone.",
+    "turnsBad": "The day he leaves, if we have no other contact.",
+    "ids": [
+     "champion_leaves",
+     "calls_index.json"
+    ]
+   },
+   {
+    "type": "Deadline at risk",
+    "what": "Renewal: term ends 28 Feb 2027 and does not renew by itself.",
+    "turnsBad": "Weeks earlier if procurement must run a formal process.",
+    "ids": [
+     "contract.txt",
+     "calls/2025-12-16_pilot_review.txt"
+    ]
+   },
+   {
+    "type": "Going cold",
+    "what": "Metro Central: docks with live flights fell from 8 (Aug) to 3 (Oct).",
+    "turnsBad": "At renewal, when the force asks why it pays for idle docks.",
+    "ids": [
+     "flight_log_force_month"
+    ]
+   },
+   {
+    "type": "Stuck",
+    "what": "FB-10412, a document request from one of the forces, unowned since 29 Jun; the requester chased on 14 Aug.",
+    "turnsBad": "Already overdue.",
+    "ids": [
+     "FB-10412",
+     "tickets.json",
+     "internal_notes.json"
+    ]
+   },
+   {
+    "type": "Stuck",
+    "what": "Tender (since July) and stadium (since October): no document, no quote, no other name.",
+    "turnsBad": "If they are counted as pipeline.",
+    "ids": [
+     "rc_tender_0",
+     "rc_stadium_0"
+    ]
+   }
+  ],
+  "unknown": [
+   {
+    "gap": "Which dock sits at which force",
+    "why": "Usage cannot be tied to who pays, so we cannot say which force is getting value.",
+    "who": "FlytBase field team / onboarding lead (install sheets); Pranjal Suyal",
+    "ids": [
+     "devices.json",
+     "calls/2026-04-28_install_close.txt"
+    ]
+   },
+   {
+    "gap": "How the £350,000 splits across the four forces",
+    "why": "Shows who pays for the unused docks, and who could cut them.",
+    "who": "FlytBase Accounts (Schedule 2)",
+    "ids": [
+     "contract.txt",
+     "invoices.json"
+    ]
+   },
+   {
+    "gap": "Who signs the renewal after Rhys",
+    "why": "The renewal has no sponsor once he leaves.",
+    "who": "Rhys Calder",
+    "ids": [
+     "champion_leaves",
+     "emails/2026-10-28_renewal.txt"
+    ]
+   },
+   {
+    "gap": "The procurement lead's name, and whether the renewal needs a formal process",
+    "why": "Sets how early we must start.",
+    "who": "Rhys Calder, or the alliance office",
+    "ids": [
+     "calls/2025-12-16_pilot_review.txt",
+     "profile.json"
+    ]
+   },
+   {
+    "gap": "What FB-10412 asks for, and from whom",
+    "why": "The only direct request from a force other than Westmere, unanswered for months.",
+    "who": "Support desk (ask Neel Sharma to assign it)",
+    "ids": [
+     "FB-10412",
+     "tickets.json"
+    ]
+   },
+   {
+    "gap": "Whether the tender and the stadium are real",
+    "why": "They are the only growth story, and both rest on one person's word.",
+    "who": "Procurement lead (tender); Karen Mbeki (stadium)",
+    "ids": [
+     "rc_tender_0",
+     "rc_stadium_0"
+    ]
+   }
+  ]
+ },
+ "B": {
+  "worth": {
+   "backed": [
+    {
+     "deal": "Renew the Aldermoor contract (14 docks)",
+     "id": "b_renewal",
+     "value": "€140,000 a year",
+     "basis": "Order form: €140,000 a year, term 1 Feb 2026 – 31 Jan 2027, no automatic renewal, one invoice to group security (paid).",
+     "ids": [
+      "b_renewal",
+      "contract.txt",
+      "invoices.json"
+     ]
+    },
+    {
+     "deal": "Protect and extend the insurance discount",
+     "id": "b_insurance",
+     "value": "About €180,000 a year to the customer",
+     "basis": "The insurer cut premiums 6% across nine plants, citing the drone patrols. It is the only hard financial benefit on file, and it is larger than the contract. Told by Neel Sharma; not yet confirmed with Julian Tate.",
+     "ids": [
+      "b_insurance",
+      "jt_prem_2"
+     ]
+    },
+    {
+     "deal": "Docks for Plant 15 and two idle plants",
+     "id": "b_more_plants",
+     "value": "€160,000",
+     "basis": "Offer on file, pitched to Stefan Roy, declined.",
+     "ids": [
+      "b_more_plants"
+     ]
+    },
+    {
+     "deal": "Night-time priority support for Plant 7",
+     "id": "b_priority_support",
+     "value": "€50,000",
+     "basis": "Offer on file, pitched to Beatriz Alonso, declined.",
+     "ids": [
+      "b_priority_support"
+     ]
+    }
+   ],
+   "unbacked": [
+    {
+     "item": "\"ROI is proven, about €1.2 million a year\"",
+     "why": "Stefan's claim. The breakdown was promised in July and never sent; the order form quotes no savings.",
+     "ids": [
+      "sr_roi_0",
+      "emails/2026-07-16_stefan_savings.txt",
+      "contract.txt"
+     ]
+    },
+    {
+     "item": "\"Thirteen of fifteen plants are flying\"",
+     "why": "Stefan's claim. Weekly usage shows only 4 docks ever flew most nights.",
+     "ids": [
+      "sr_roll_0",
+      "usage_weekly.csv"
+     ]
+    },
+    {
+     "item": "Case study for the 40-plant sister company",
+     "why": "No contact at the sister company; the case study is blocked on the savings breakdown and a plant willing to be quoted.",
+     "ids": [
+      "b_sister",
+      "deal_history.json",
+      "calls/2026-10-13_check_in.txt"
+     ]
+    }
+   ]
+  },
+  "power": [
+   {
+    "deal": "Renewal (b_renewal)",
+    "decides": "Stefan Roy signed from the group security budget, but Group Finance now wants the quote by plant, so finance may decide.",
+    "pays": "Group security pays one invoice; plants are charged an allocation they did not choose.",
+    "uses": "Plant operators; Stefan's deputy runs it day to day (38 sign-ins in 90 days); Beatriz at Plant 7.",
+    "blocks": "Group Finance; plant managers who see the dock as head office's toy (Plant 11).",
+    "stance": [
+     [
+      "Stefan Roy",
+      "Neutral. Talks headline numbers; has not signed in since 12 May."
+     ],
+     [
+      "Beatriz Alonso",
+      "Guarded, but would keep her dock after two deterred break-ins."
+     ],
+     [
+      "Group Finance",
+      "Unknown. Unsigned email of 8 Oct, unanswered."
+     ]
+    ],
+    "ids": [
+     "calls/2026-01-08_order_call.txt",
+     "emails/2026-10-08_finance_mailbox.txt",
+     "ba_cost_2",
+     "users.json",
+     "ba_other_1"
+    ]
+   },
+   {
+    "deal": "Insurance discount (b_insurance)",
+    "decides": "The insurer, through Julian Tate (insurance and risk manager).",
+    "pays": "Benefit goes to the group (about €180,000 a year).",
+    "uses": "Depends on the night patrols continuing.",
+    "blocks": "Patrols stopping, as three busy docks just did.",
+    "stance": [
+     [
+      "Julian Tate",
+      "Neutral. Nobody in security has ever asked him."
+     ]
+    ],
+    "ids": [
+     "jt_prem_2",
+     "usage_drop"
+    ]
+   },
+   {
+    "deal": "Idle plants into regular patrol (b_idle)",
+    "decides": "Each plant manager; the deputy set up the rollout.",
+    "pays": "Each plant through its allocation.",
+    "uses": "Most plants fly about once a fortnight.",
+    "blocks": "Weak networks (Plant 11, FB-10903) and the deputy leaving with the know-how.",
+    "stance": [
+     [
+      "Owen Fitch",
+      "Neutral. Group IT, not yet involved."
+     ],
+     [
+      "Stefan's deputy",
+      "Name not on file. Leaving soon."
+     ]
+    ],
+    "ids": [
+     "b_idle",
+     "FB-10903",
+     "sr_repl_2",
+     "usage_weekly.csv"
+    ]
+   }
+  ],
+  "first": [
+   {
+    "rank": 1,
+    "move": "Find out why AD-02, AD-05 and AD-10 stopped flying while online: check their patrol schedules remotely and ask the deputy and plant operators.",
+    "owner": "Viraf, with Pranjal Suyal (Lead Solutions Engineer)",
+    "by": "2 Dec 2026",
+    "deal": "b_renewal, b_insurance",
+    "ids": [
+     "usage_drop",
+     "usage_weekly.csv"
+    ]
+   },
+   {
+    "rank": 2,
+    "move": "Write down the install list, patrol schedules and alert recipients with Stefan's deputy before he leaves (ask Beatriz or Stefan for his contact).",
+    "owner": "Viraf",
+    "by": "4 Dec 2026",
+    "deal": "b_idle",
+    "ids": [
+     "sr_repl_2",
+     "ba_deputy_0",
+     "calls/2026-04-23_rollout_close.txt"
+    ]
+   },
+   {
+    "rank": 3,
+    "move": "Meet Julian Tate to confirm the discount and the patrol level the insurer expects; then answer Group Finance with cost and value per plant.",
+    "owner": "Viraf, with Achal Negi (Director of Business Development)",
+    "by": "11 Dec 2026",
+    "deal": "b_renewal, b_insurance",
+    "ids": [
+     "jt_prem_2",
+     "emails/2026-10-08_finance_mailbox.txt",
+     "ba_cost_2"
+    ]
+   }
+  ],
+  "wrong": [
+   {
+    "type": "Deal turning bad",
+    "what": "Three docks that flew most nights (AD-02, AD-05, AD-10) flew nothing in the last two weeks. Online, no ticket, nobody told us.",
+    "turnsBad": "At the insurer's next review of the discount (date unknown), and at renewal.",
+    "ids": [
+     "usage_drop",
+     "usage_weekly.csv"
+    ]
+   },
+   {
+    "type": "Person leaving",
+    "what": "Stefan's deputy, who did the whole rollout, leaves soon; nothing is written down.",
+    "turnsBad": "The day he leaves.",
+    "ids": [
+     "sr_repl_2",
+     "get_my_accounts → deadlines"
+    ]
+   },
+   {
+    "type": "Deadline at risk",
+    "what": "Renewal: term ends 31 Jan 2027 and does not renew by itself; finance wants it by plant.",
+    "turnsBad": "When finance reviews the quote and sees idle docks.",
+    "ids": [
+     "contract.txt",
+     "emails/2026-10-08_finance_mailbox.txt"
+    ]
+   },
+   {
+    "type": "Going cold",
+    "what": "Stefan Roy: no sign-in since 12 May. Group Finance: unanswered since 8 Oct.",
+    "turnsBad": "Already cold.",
+    "ids": [
+     "users.json",
+     "emails/2026-10-08_finance_mailbox.txt"
+    ]
+   },
+   {
+    "type": "Stuck",
+    "what": "Plant 11's dock drops offline (FB-10903, waiting on customer IT since 10 Sep); case study blocked since September.",
+    "turnsBad": "Already stuck.",
+    "ids": [
+     "FB-10903",
+     "calls/2026-10-13_check_in.txt"
+    ]
+   }
+  ],
+  "unknown": [
+   {
+    "gap": "Why the three busy docks stopped",
+    "why": "If patrols stay off, the insurance discount (the real ROI) is at risk.",
+    "who": "Stefan's deputy and the plant operators; Pranjal Suyal (remote check)",
+    "ids": [
+     "usage_drop"
+    ]
+   },
+   {
+    "gap": "The deputy's name and leaving date",
+    "why": "Sets the deadline for capturing the rollout know-how.",
+    "who": "Stefan Roy or Beatriz Alonso",
+    "ids": [
+     "sr_repl_2",
+     "profile.json"
+    ]
+   },
+   {
+    "gap": "Which dock sits at which plant",
+    "why": "Finance wants cost per plant; we cannot give it without the install list.",
+    "who": "Stefan's deputy (keeps the install list)",
+    "ids": [
+     "calls/2026-04-23_rollout_close.txt",
+     "devices.json"
+    ]
+   },
+   {
+    "gap": "The insurer's conditions for the 6% discount",
+    "why": "It is the strongest renewal argument, and it may depend on patrol levels.",
+    "who": "Julian Tate; Neel Sharma (who heard it)",
+    "ids": [
+     "jt_prem_2"
+    ]
+   },
+   {
+    "gap": "The working behind the €1.2M saving",
+    "why": "Nothing can be quoted, and the case study is blocked, until it exists.",
+    "who": "Stefan Roy, or Group Finance",
+    "ids": [
+     "sr_roi_0",
+     "emails/2026-07-16_stefan_savings.txt"
+    ]
+   },
+   {
+    "gap": "Who gets night alerts at each plant, and why Beatriz wanted more recipients",
+    "why": "A patrol that flags something nobody receives has no value.",
+    "who": "Beatriz Alonso; Stefan's deputy",
+    "ids": [
+     "FB-10944",
+     "calls/2026-08-25_check_in.txt"
+    ]
+   }
+  ]
+ }
+}
