@@ -1,0 +1,46 @@
+{
+ "A": [
+  {
+   "kind": "risk",
+   "title": "Single point of contact is leaving",
+   "text": "Every call since May has been with Rhys Calder alone, and he leaves the programme in January with no successor named. The renewal (28 Feb 2027, no automatic renewal, \u00a3350k) has no other sponsor on our side. Evidence: champion_leaves signal, profile, calls_index."
+  },
+  {
+   "kind": "risk",
+   "title": "Only about half the docks are really used",
+   "text": "October flight log: Westmere 14 of 18 docks on live missions, Metro Central only 3 of 9 (down from 8 in August), Tarn Valley 0 of 4 ever, Norwold training only. About 17 of 35 docks earn their keep, which contradicts 'all four forces are keen'. Evidence: flight_log_force_month, rc_appetite_2, rc_appetite_0."
+  },
+  {
+   "kind": "next_step",
+   "title": "Reply to Karen in writing this week",
+   "text": "Own ticket FB-11206 today. Send Insp. Karen Mbeki in writing this week: dates for training more operators before 5 December, and a named contact and response time if a dock fails on the day. Also answer her unanswered 11 Aug battery email: docks D16 and D29 show repeated battery warnings. Evidence: urgent_request signal, emails/2026-08-11, device_events."
+  },
+  {
+   "kind": "task",
+   "title": "Widen contacts before Rhys leaves",
+   "text": "Before January: get named contacts at Westmere, Metro Central, Tarn Valley and Norwold, and at the alliance procurement lead. Find the owner and content of FB-10412 (document request from a force, unowned since 29 June). Ask FlytBase Accounts for Schedule 2 to see what each force pays. Evidence: profile not_on_file, tickets FB-10412, contract."
+  }
+ ],
+ "B": [
+  {
+   "kind": "risk",
+   "title": "Night patrols collapsing",
+   "text": "Only 4 of 14 docks ever patrolled most nights (AD-02, AD-05, AD-08, AD-10). 9 docks fly about once a fortnight and AD-14 has never flown. In mid-November AD-02, AD-05 and AD-10 stopped completely while online. No ticket, nobody at the customer said anything. This contradicts 'thirteen of fifteen plants are flying'. Evidence: usage_drop signal, usage_weekly, sr_roll_0."
+  },
+  {
+   "kind": "next_step",
+   "title": "Protect the insurance discount with Julian Tate",
+   "text": "Meet Julian Tate (insurance and risk) to confirm the 6% premium cut across nine plants (~\u20ac180k a year) and what patrol level the insurer expects. This is the only verified financial benefit and is larger than the contract value (\u20ac140k). Build the renewal case on it instead of the unproven \u20ac1.2M claim. Evidence: jt_prem_2, sr_roi_0."
+  },
+  {
+   "kind": "task",
+   "title": "Capture the rollout know-how before the deputy leaves",
+   "text": "Before Stefan Roy's deputy leaves: get the install list (which dock is at which plant, who was trained), the patrol schedules and alert recipients written down. Ask Owen Fitch (IT) to fix the Plant 11 network link (FB-10903, pending since September). Evidence: sr_repl_2, ba_deputy_0, ba_other_1, rollout close call notes."
+  },
+  {
+   "kind": "next_step",
+   "title": "Answer Group Finance with cost and value per plant",
+   "text": "Reply to Group Finance's 8 October request with the renewal cost per plant alongside usage and value per plant, so idle docks are discussed openly rather than cut blindly. Agree the renewal scope before 31 Jan 2027. Evidence: emails/2026-10-08_finance_mailbox, ba_cost_2, usage_weekly."
+  }
+ ]
+}
