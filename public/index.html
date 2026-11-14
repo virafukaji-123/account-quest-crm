@@ -1,0 +1,234 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Account Quest CRM</title>
+<style>
+  :root { --bg:#f5f3ee; --card:#fff; --ink:#1f2328; --muted:#6b7280; --line:#e5e1d8; --accent:#0f766e; --accent2:#e6f4f2;
+          --green:#15803d; --amber:#b45309; --red:#b91c1c; --greenbg:#dcfce7; --amberbg:#fef3c7; --redbg:#fee2e2; }
+  * { box-sizing:border-box; }
+  body { margin:0; font-family:"Segoe UI", system-ui, Roboto, sans-serif; background:var(--bg); color:var(--ink); font-size:15px; line-height:1.5; }
+  .wrap { max-width:1000px; margin:0 auto; padding:0 20px 60px; }
+  header { background:#fff; border-bottom:1px solid var(--line); position:sticky; top:0; z-index:5; }
+  header .wrap { display:flex; align-items:center; gap:12px; padding-top:12px; padding-bottom:12px; flex-wrap:wrap; }
+  header h1 { font-size:19px; margin:0; margin-right:auto; }
+  .status { font-size:13px; color:var(--muted); background:#f3f4f6; padding:4px 10px; border-radius:20px; }
+  button { font:inherit; font-size:14px; border:1px solid var(--line); background:#fff; color:var(--ink); padding:7px 14px; border-radius:8px; cursor:pointer; }
+  button:hover { border-color:var(--accent); }
+  button.primary { background:var(--accent); border-color:var(--accent); color:#fff; }
+  button.small { padding:4px 10px; font-size:13px; }
+  button:disabled { opacity:.5; cursor:default; }
+  .linkbtn { border:none; background:none; padding:0; color:var(--accent); text-decoration:underline dotted; cursor:pointer; font-size:inherit; }
+
+  .banner { background:#fff7d6; border:1px solid #f1d27a; border-radius:12px; padding:12px 16px; margin-top:16px; display:none; }
+  .banner.show { display:block; animation:pop .4s ease; }
+  @keyframes pop { from { transform:scale(.98); opacity:.3 } to { transform:none; opacity:1 } }
+
+  .tabs { display:flex; gap:10px; margin:20px 0 16px; flex-wrap:wrap; }
+  .tab { flex:1; min-width:260px; text-align:left; padding:12px 16px; border-radius:12px; border:2px solid var(--line); background:#fff; }
+  .tab.on { border-color:var(--accent); background:var(--accent2); }
+  .tab b { display:block; font-size:16px; } .tab span { font-size:13px; color:var(--muted); }
+
+  .card { background:var(--card); border:1px solid var(--line); border-radius:12px; padding:18px 20px; margin-bottom:14px; }
+  .card h2 { font-size:17px; margin:0 0 10px; }
+  .headline { font-size:18px; font-weight:600; margin:6px 0 14px; }
+  .badge { display:inline-block; padding:2px 12px; border-radius:20px; font-size:13px; font-weight:600; }
+  .badge.Green{background:var(--greenbg);color:var(--green)} .badge.Amber{background:var(--amberbg);color:var(--amber)} .badge.Red{background:var(--redbg);color:var(--red)}
+  .nums { display:grid; grid-template-columns:repeat(auto-fit,minmax(170px,1fr)); gap:10px; }
+  .num { background:#faf9f6; border:1px solid var(--line); border-radius:10px; padding:10px 12px; }
+  .num small { display:block; color:var(--muted); font-size:12px; }
+  .num b { font-size:16px; }
+  .num .linkbtn { font-size:12px; }
+
+  .answer { border-top:1px solid var(--line); padding:12px 0; }
+  .answer:first-of-type { border-top:none; }
+  .answer h3 { font-size:15px; margin:0 0 4px; color:var(--accent); }
+  .answer .src { font-size:12px; color:var(--muted); margin-top:4px; }
+  ul.clean { margin:4px 0 0; padding-left:20px; } ul.clean li { margin:3px 0; }
+  .reason { display:flex; gap:10px; padding:4px 0; }
+  .reason .pts { min-width:42px; text-align:right; font-weight:700; color:var(--red); }
+  .vs { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:8px; }
+  .vs div { border-radius:10px; padding:10px 12px; } .vs .said { background:#f3f4f6; } .vs .real { background:var(--redbg); }
+  .vs small { display:block; font-weight:600; font-size:12px; color:var(--muted); }
+  @media (max-width:700px){ .vs { grid-template-columns:1fr; } }
+
+  details.sec { background:#fff; border:1px solid var(--line); border-radius:12px; margin-bottom:10px; }
+  details.sec > summary { cursor:pointer; padding:14px 20px; font-weight:600; list-style:none; display:flex; align-items:center; gap:8px; }
+  details.sec > summary::-webkit-details-marker { display:none; }
+  details.sec > summary::before { content:"▸"; color:var(--accent); transition:transform .15s; }
+  details.sec[open] > summary::before { transform:rotate(90deg); }
+  details.sec > summary .count { margin-left:auto; font-weight:400; color:var(--muted); font-size:13px; }
+  details.sec .body { padding:0 20px 16px; }
+  .item { border-top:1px solid var(--line); padding:10px 0; } .item:first-child { border-top:none; }
+  .meta { font-size:13px; color:var(--muted); }
+  .tag { display:inline-block; font-size:12px; padding:1px 8px; border-radius:10px; margin-left:6px; background:#f3f4f6; }
+  .tag.claim{background:var(--amberbg);color:var(--amber)} .tag.told{background:#e0f2fe;color:#075985} .tag.verified{background:var(--greenbg);color:var(--green)}
+  .tag.risk{background:var(--redbg);color:var(--red)} .tag.task{background:#e0f2fe;color:#075985} .tag.next_step{background:var(--greenbg);color:var(--green)}
+  .tag.new{background:#fde68a;color:#7c2d12;font-weight:700}
+
+  table.t { width:100%; border-collapse:collapse; font-size:13px; }
+  table.t th, table.t td { text-align:left; padding:5px 8px; border-bottom:1px solid var(--line); }
+  table.t th { color:var(--muted); font-weight:600; }
+  .st-regular{color:var(--green);font-weight:600} .st-stopped{color:var(--red);font-weight:700} .st-never{color:var(--red)} .st-idle{color:var(--amber)} .st-maint{color:#6d28d9}
+
+  .modal { position:fixed; inset:0; background:rgba(0,0,0,.35); display:none; align-items:flex-start; justify-content:center; z-index:20; overflow:auto; padding:40px 16px; }
+  .modal.show { display:flex; }
+  .modal .box { background:#fff; border-radius:14px; max-width:820px; width:100%; padding:20px 22px; }
+  .modal h2 { margin:0 0 6px; font-size:18px; }
+  pre { background:#f7f6f2; padding:10px; border-radius:8px; overflow:auto; max-height:280px; font-size:12px; white-space:pre-wrap; word-break:break-word; }
+  label { display:block; font-size:13px; color:var(--muted); margin:8px 0 3px; }
+  input, select, textarea { width:100%; font:inherit; font-size:14px; padding:8px 10px; border:1px solid var(--line); border-radius:8px; }
+  textarea { min-height:70px; }
+  .muted { color:var(--muted); font-size:13px; } .empty { color:var(--muted); font-style:italic; }
+  .log div { font-size:13px; padding:2px 0; } .ok{color:var(--green)} .err{color:var(--red)}
+</style>
+</head>
+<body>
+<header><div class="wrap">
+  <h1>Account Quest CRM</h1>
+  <span class="status" id="status">Loading…</span>
+</div></header>
+
+<div class="wrap">
+  <div class="banner" id="banner"></div>
+  <div class="tabs" id="tabs"></div>
+  <div id="main"><div class="card">Loading the accounts…</div></div>
+</div>
+
+<div class="modal" id="modal" onclick="if(event.target===this)closeModal()"><div class="box" id="modalBox"></div></div>
+
+<script>
+let S = null, current = "A", openState = {}, seenEvents = null;
+let ADMIN = ""; try { const k = new URLSearchParams(location.search).get("key"); if (k) localStorage.setItem("aqKey", k); ADMIN = localStorage.getItem("aqKey") || ""; } catch {}
+const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;" }[c]));
+const ago = (iso) => { if (!iso) return "never"; const m = Math.round((Date.now() - new Date(iso)) / 60000); return m < 1 ? "just now" : m < 60 ? `${m} min ago` : `${Math.round(m / 60)} h ago`; };
+const kindLabel = { risk:"Risk", task:"Task", next_step:"Next step", note:"Note" };
+const statusLabel = { claim:"Claim – not checked", told:"Told to us", verified:"Checked ✓" };
+const A = () => S.accounts.find((a) => a.id === current);
+const fmtDate = (d) => d ? new Date(d).toLocaleDateString("en-GB", { day:"numeric", month:"short", year:"numeric" }) : "";
+
+function sec(key, title, count, inner, open) {
+  const o = openState[key] ?? open;
+  return `<details class="sec" data-key="${key}" ${o ? "open" : ""}><summary>${title}<span class="count">${count ?? ""}</span></summary><div class="body">${inner}</div></details>`;
+}
+
+// ---------- the five answers ----------
+function fiveAnswers(a) {
+  const f = a.fleet, b = a.brief || {}, h = a.health;
+  const people = a.contacts;
+  const top = [...h.reasons].sort((x, y) => y.points - x.points).slice(0, 3);
+  return [
+    { q: "1. How healthy is this account?", a: `<span class="badge ${h.rating}">${h.rating}</span> <b>${h.score} risk points.</b> ${esc(b.headline || "")}
+        <div style="margin-top:6px">${h.reasons.map((r) => `<div class="reason"><span class="pts">+${r.points}</span><span>${esc(r.text)} <span class="meta">· ${esc(r.evidence)}</span></span></div>`).join("")}</div>`,
+      src: h.rule },
+    { q: "2. What is really going on (vs. what we were told)?", a: (b.vs || []).map(([s, r]) => `<div class="vs"><div class="said"><small>They say</small>${esc(s)}</div><div class="real"><small>The evidence shows</small>${esc(r)}</div></div>`).join(""),
+      src: "Claims from get_my_accounts (facts marked claim / told / checked), compared with usage, calls and events." },
+    { q: "3. Who matters, and who are we missing?", a: `<ul class="clean">${(b.people || []).map(([n, t]) => `<li><b>${esc(n)}</b> – ${esc(t)}</li>`).join("")}</ul>
+        <div class="meta" style="margin-top:6px">Calls since handover: ${people.callsSinceHandover}, all with: ${esc(people.peopleOnThoseCalls.join(", ") || "nobody")}.</div>`,
+      src: people.evidence },
+    { q: "4. What could stop the renewal?", a: `<ul class="clean">${top.map((r) => `<li>${esc(r.text)}</li>`).join("")}${(b.risks || []).slice(0, 2).map((r) => `<li>${esc(r)}</li>`).join("")}</ul>`,
+      src: "Biggest risk points from the health score, plus analyst notes." },
+    { q: "5. What do we do next?", a: `<ul class="clean">${(b.actions || []).map((r) => `<li>${esc(r)}</li>`).join("")}</ul>`,
+      src: "Ordered by urgency: events with a date first, then renewal deadline." },
+  ];
+}
+
+function render() {
+  const a = A(), f = a.fleet, h = a.health;
+  document.getElementById("tabs").innerHTML = S.accounts.map((x) => `<button class="tab ${x.id === current ? "on" : ""}" onclick="pick('${x.id}')">
+    <b>${esc(x.name)} <span class="badge ${x.health.rating}">${x.health.rating}</span></b><span>${esc(x.brief?.tabline || x.story || "")}</span></button>`).join("");
+
+  let html = `<div class="card">
+    <h2><span class="badge ${h.rating}">${h.rating} · ${h.score} risk points</span></h2>
+    <div class="headline">${esc(a.brief?.headline || a.story || "")}</div>
+    <div class="nums">
+      <div class="num"><small>Contract</small><b>${esc(a.renewal?.label || "–")}</b><br><button class="linkbtn" onclick="trace('renewal')">where from?</button></div>
+      <div class="num"><small>Renewal</small><b>${fmtDate(a.renewal?.date)}</b><br><span class="meta">${a.renewal?.daysLeft} days · not automatic</span></div>
+      <div class="num"><small>Docks flying regularly now</small><b>${f.flyingNow} of ${f.total}</b><br><button class="linkbtn" onclick="trace('fleet')">trace this number</button></div>
+      <div class="num"><small>Open requests nobody owns</small><b>${a.openRequests.length}</b><br><button class="linkbtn" onclick="trace('requests')">see them</button></div>
+    </div></div>`;
+
+  html += `<div class="card"><h2>The five answers</h2>${fiveAnswers(a).map((x) => `<div class="answer"><h3>${x.q}</h3>${x.a}<div class="src">How it decides: ${esc(x.src)}</div></div>`).join("")}</div>`;
+
+  // events
+  const newIds = new Set((S.newEvents || []).map((e) => e.id));
+  html += sec("events", "🔔 Events since you took over", a.events.length, a.events.length ? a.events.map((e) => `<div class="item"><b>${esc(e.title)}</b>${newIds.has(e.id) ? '<span class="tag new">NEW</span>' : ""} <span class="meta">· ${fmtDate(e.dated)}</span><br>${esc(e.summary)}
+    ${e.records?.length ? `<details><summary class="meta" style="cursor:pointer">Original email / data</summary>${e.records.map((r) => `<pre>${esc(r.text)}</pre>`).join("")}</details>` : ""}</div>`).join("") : '<div class="empty">Nothing yet.</div>', true);
+
+  // notes
+  const sent = S.notesSent.filter((n) => n.account === current).map((n) => n.title);
+  const queued = S.noteQueue.filter((n) => n.account === current).map((n) => n.title);
+  html += sec("notes", "📝 Notes for the judges", `${sent.length} sent`, a.drafts.map((d, i) => {
+    const st = sent.includes(d.title) ? `<span class="meta ok">✓ sent</span>` : queued.includes(d.title) ? `<span class="meta">⏳ queued</span>` : ADMIN ? `<button class="small primary" onclick="sendDraft(${i})">Send</button>` : "";
+    return `<div class="item" style="display:flex;gap:12px"><div style="flex:1"><b>${esc(d.title)}</b><span class="tag ${d.kind}">${kindLabel[d.kind]}</span><br>${esc(d.text)}</div>${st}</div>`;
+  }).join("") + (ADMIN ? `<div class="item"><b>Write your own</b><div style="display:grid;grid-template-columns:160px 1fr;gap:8px"><select id="nKind"><option value="next_step">Next step</option><option value="risk">Risk</option><option value="task">Task</option><option value="note">Note</option></select><input id="nTitle" placeholder="Short title"></div><textarea id="nText" placeholder="What, who, by when, and the evidence" style="margin-top:6px"></textarea><button class="primary" style="margin-top:6px" onclick="sendOwn()">Queue note</button></div>` : `<div class="meta">Read-only view. The owner sends notes with a private key.</div>`), false);
+
+  // what people told us
+  html += sec("facts", "💬 What people told us", a.facts.length, a.facts.map((x) => `<div class="item">"${esc(x.text)}"<span class="tag ${x.status}">${statusLabel[x.status] || x.status}</span><br><span class="meta">${esc(x.said_by)}</span></div>`).join(""), false);
+  // deals
+  html += sec("deals", "💼 Deals and offers", a.opportunities.length + a.offers.length, a.opportunities.map((o) => `<div class="item"><b>${esc(o.title)}</b> <span class="meta">· ${esc(o.stage)}</span>${o.deadline ? `<br><span class="err">Deadline: ${esc(o.deadline.text)}</span>` : ""}</div>`).join("") + a.offers.map((o) => `<div class="item"><b>Offer: ${esc(o.title)}</b> <span class="meta">· ${Number(o.value).toLocaleString("en-GB")} · to ${esc(o.pitch_to)} · ${esc(o.status)}</span></div>`).join(""), false);
+  // behind the scenes
+  html += sec("tech", "⚙️ Behind the scenes", "", `<div class="meta">Game date ${fmtDate(S.gameDate)} · storage: ${esc(S.storage)} · accounts fetched ${ago(S.dataAsOf.accounts)} · events checked ${ago(S.dataAsOf.signals)}</div>
+    <div class="log" style="margin-top:8px">${S.log.map((l) => `<div><span class="${l.ok ? "ok" : "err"}">${l.ok ? "✓" : "✗"}</span> ${esc(l.call)} <span class="meta">${ago(l.at)}</span>${l.error ? ` <span class="err">${esc(l.error)}</span>` : ""}</div>`).join("") || '<div class="empty">No calls yet</div>'}</div>`, false);
+
+  document.getElementById("main").innerHTML = html;
+  document.querySelectorAll("details.sec").forEach((d) => d.addEventListener("toggle", () => (openState[d.dataset.key] = d.open)));
+}
+
+// ---------- tracing a number back to its source ----------
+function trace(what) {
+  const a = A(); let h = "";
+  if (what === "fleet") {
+    const f = a.fleet;
+    const cls = (d) => d.stopped ? "st-stopped" : d.status === "regular" ? "st-regular" : d.status === "never flown" ? "st-never" : d.status === "in maintenance" ? "st-maint" : "st-idle";
+    h = `<h2>Docks flying regularly now: ${f.flyingNow} of ${f.total}</h2>
+      <p class="muted"><b>Source:</b> ${esc(f.evidence)} · ${esc(f.window)}<br><b>Rule:</b> ${esc(f.rule)}</p>
+      <p>Regular ${f.regular} · Occasional ${f.occasional} · Idle ${f.idle} · Never flown ${f.never} · In maintenance ${f.maintenance} · <span class="st-stopped">Stopped ${f.stopped.length}</span></p>
+      <table class="t"><tr><th>Dock</th><th>Flights, 4 weeks before</th><th>Flights, last 4 weeks</th><th>Last 2 weeks</th><th>Flying now?</th><th>Status</th></tr>
+      ${f.perDock.map((d) => `<tr><td>${d.dock}</td><td>${d.before}</td><td>${d.recent}</td><td>${d.lastTwo}</td><td>${d.flyingNow ? "Yes" : "No"}</td><td class="${cls(d)}">${d.stopped ? "STOPPED" : d.status}</td></tr>`).join("")}</table>`;
+  } else if (what === "renewal") {
+    h = `<h2>Contract and renewal</h2><p><b>${esc(a.renewal.label)}</b>, term ends <b>${fmtDate(a.renewal.date)}</b> (${a.renewal.daysLeft} days from the game date). No automatic renewal.</p><p class="muted">Source: ${esc(a.renewal.evidence)}</p>`;
+  } else if (what === "requests") {
+    h = `<h2>Open requests nobody owns: ${a.openRequests.length}</h2><p class="muted">Source: requests.csv (plus rows added by new events). Rule: status Open and the owner column is empty.</p>
+      <table class="t"><tr><th>Request</th><th>Opened</th><th>Days open</th><th>From</th><th>What</th></tr>${a.openRequests.map((r) => `<tr><td>${esc(r.id)}</td><td>${esc(r.opened)}</td><td>${r.age}</td><td>${esc(r.from)}</td><td>${esc(r.summary)}</td></tr>`).join("")}</table>`;
+  }
+  document.getElementById("modalBox").innerHTML = h + `<div style="margin-top:14px;text-align:right"><button onclick="closeModal()">Close</button></div>`;
+  document.getElementById("modal").classList.add("show");
+}
+function closeModal() { document.getElementById("modal").classList.remove("show"); }
+
+// ---------- notes (owner only) ----------
+async function postNote(n) {
+  const r = await fetch("/api/note", { method: "POST", headers: { "content-type": "application/json", "x-admin-key": ADMIN }, body: JSON.stringify(n) });
+  if (!r.ok) alert((await r.json()).error);
+}
+async function sendDraft(i) { const d = A().drafts[i]; await postNote({ account: current, kind: d.kind, title: d.title, text: d.text }); load(); }
+async function sendOwn() {
+  const text = document.getElementById("nText").value.trim(); if (!text) return alert("Write the note first.");
+  await postNote({ account: current, kind: document.getElementById("nKind").value, title: document.getElementById("nTitle").value.trim(), text }); load();
+}
+
+// ---------- live updates ----------
+function showNew(events) {
+  const all = S.accounts.flatMap((a) => a.events.map((e) => ({ ...e, acc: a.name })));
+  const fresh = all.filter((e) => events.includes(e.id));
+  const el = document.getElementById("banner");
+  el.innerHTML = `<b>🔔 New event picked up:</b> ${fresh.map((e) => `${esc(e.acc)} – ${esc(e.title)}`).join("; ")}. The numbers below have been recalculated.`;
+  el.classList.add("show");
+}
+async function load() {
+  S = await (await fetch("/api/state")).json();
+  const ids = S.accounts.flatMap((a) => a.events.map((e) => e.id));
+  if (seenEvents && ids.some((id) => !seenEvents.has(id))) showNew(ids.filter((id) => !seenEvents.has(id)));
+  seenEvents = new Set(ids);
+  document.getElementById("status").textContent = `Live · events checked ${ago(S.dataAsOf.signals)}`;
+  const typing = document.activeElement?.matches("input, textarea, select");
+  if (!typing && !document.getElementById("modal").classList.contains("show")) render();
+}
+function pick(id) { current = id; render(); window.scrollTo(0, 0); }
+async function tick() { try { await fetch("/api/refresh"); } catch {} await load(); }
+load().then(tick); setInterval(tick, 20000);
+</script>
+</body>
+</html>
