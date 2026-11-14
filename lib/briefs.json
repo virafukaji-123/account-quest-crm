@@ -183,5 +183,68 @@
     "Ordered and installed the dock, then stopped answering calls and email."
    ]
   ]
+ },
+ "H": {
+  "tabline": "Busy quays, idle yard, and finance can't see the saving",
+  "headline": "Brindle pays £96,000 a year for 6 docks. Only 2 fly every night, the yard dock is blocked by a privacy question we never answered, and the finance director who signs the renewal can't see the £400,000 saving.",
+  "numbers": [
+   [
+    "Docks",
+    "6 across three quays and a container yard"
+   ]
+  ],
+  "vs": [
+   [
+    "The programme saves about £400,000 a year.",
+    "It is Marcus's own estimate of patrol hours. Finance has not seen the workings and no patrol contract has changed."
+   ],
+   [
+    "6 docks are a success.",
+    "Only D1 and D2 fly every night (183 of 211 flights in Aug–Oct). D3 and D4 fly about weekly; D5 and D6 flew 3 times in 3 months."
+   ],
+   [
+    "Ready to expand to two more harbours.",
+    "Marcus's wish only. No budget holder, no timetable, and the renewal itself is not safe yet."
+   ],
+   [
+    "Everything is running.",
+    "Elena's data-protection questions (FB-10231) have had no reply since 14 April, so the yard dock cannot go live."
+   ]
+  ],
+  "risks": [
+   "Priya Nair (finance) signs the renewal and will not renew on a saving she cannot see.",
+   "Tom Reyes, who knows the launch steps, patrol routes and alert rota, leaves in mid-December; nothing is written down.",
+   "IT moves the yard to a new segmented network around February, but has no record of what the docks need.",
+   "FlytBase never answered Elena's privacy request (7 months), which blocks the yard dock."
+  ],
+  "actions": [
+   "Answer Elena Varga's four data-protection questions (FB-10231) and apologise for the delay.",
+   "Capture Tom's launch steps, routes and alert rota before he leaves (the £12,000 playbook offer).",
+   "Build a saving case with Priya Nair from real patrol data, not the headline figure.",
+   "Give Sam Okoye (IT) the docks' network needs before the yard network change.",
+   "Hold the expansion talk until the renewal case is agreed with finance."
+  ],
+  "people": [
+   [
+    "Marcus Hale – head of port operations",
+    "Signed the order and champions it. Says 'it is my operation'; the only person we have spoken to."
+   ],
+   [
+    "Priya Nair – finance director",
+    "Signs the renewal. Guarded: has not seen the workings behind the saving."
+   ],
+   [
+    "Elena Varga – data protection lead",
+    "Waiting since 14 April for answers about footage. Her sign-off unlocks the yard."
+   ],
+   [
+    "Tom Reyes – rollout contractor",
+    "Set everything up. Contract ends next month; it is all in his head."
+   ],
+   [
+    "Sam Okoye – IT infrastructure manager",
+    "Not involved in the installs. Moving yard devices to a new network."
+   ]
+  ]
  }
 }
